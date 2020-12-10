@@ -14,13 +14,27 @@
         firebase.initializeApp(firebaseConfig);
     }
 
-    //get elements
-    const preObject = document.getElementById('object');
     //create refs
     const dbRefObject = firebase.database().ref().child('object');
 
     //sync object changes
     dbRefObject.on('value', snap => console.log(snap.val()));
+
+
+    const txtUser = document.getElementById('email');
+    const txtPass = document.getElementById('pass');
+    const loginBtn = document.getElementById('loginBtn');
+
+    loginBtn.addEventListener('click', e=>{
+        const email = txtUser.value;
+        const pass = txtPass.value;
+        const auth = firebase.auth();
+
+        const promise = auth.signInWithEmailAndPassword(email,pass);
+        promise.catch(e => console.log(e.message));
+
+
+    });
 
 }());
 
