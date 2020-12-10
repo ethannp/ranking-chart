@@ -1,3 +1,10 @@
+const txtUser = document.getElementById('user');
+const txtPass = document.getElementById('pass');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const infoLogin = document.getElementById('infoLogin');
+const admin = document.getElementById('admin');
+
 (function () {
     var firebaseConfig = {
         apiKey: "AIzaSyC4zbil44wr1l7QjJ8EbKwbTi4h3jxDycc",
@@ -14,29 +21,60 @@
         firebase.initializeApp(firebaseConfig);
     }
 
-    //create refs
-    const dbRefObject = firebase.database().ref().child('object');
+    const db= firebase.database();
 
     //sync object changes
-    dbRefObject.on('value', snap => console.log(snap.val()));
+    //dbAdmin.on('value', snap => snap.val());
 
-
-    const txtUser = document.getElementById('email');
-    const txtPass = document.getElementById('pass');
-    const loginBtn = document.getElementById('loginBtn');
-
-    loginBtn.addEventListener('click', e=>{
+    loginBtn.addEventListener('click', e => {
         const email = txtUser.value;
         const pass = txtPass.value;
         const auth = firebase.auth();
 
-        const promise = auth.signInWithEmailAndPassword(email,pass);
-        promise.catch(e => console.log(e.message));
+        const promise = auth.signInWithEmailAndPassword(email, pass);
+        promise.catch(e => e); //console.log(e.message)
+    });
 
+    logoutBtn.addEventListener('click', e => {
+        firebase.auth().signOut();
+    });
 
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            txtUser.value = "";
+            txtPass.value = "";
+            txtUser.style.display = "none";
+            txtPass.style.display = "none";
+            loginBtn.style.display = "none";
+            logoutBtn.style.display = "block";
+            infoLogin.innerHTML="You are logged in as " + user.email.substring(0,user.email.indexOf("@"));
+            var dbAdmin = db.ref('/admins/'+firebase.auth().currentUser.uid).once('value').then((snapshot) =>{
+                if(snapshot.node_.value_ == "admin"){
+                    var h=document.createElement("H1");
+                    var t=document.createTextNode("Admin Panel")
+                    h.appendChild(t);
+                    admin.appendChild(h);
+                    admin.style.display = "block";
+                }
+            });
+        } else {
+            loginBtn.style.display = "block";
+            logoutBtn.style.display = "none";
+            txtUser.style.display = "block";
+            txtPass.style.display = "block";
+            infoLogin.innerHTML="";
+            admin.style.display = "none";
+        }
     });
 
 }());
+
+txtPass.addEventListener("keyup", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      loginBtn.click();
+    }
+  });
 
 
 var data = [
