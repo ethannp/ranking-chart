@@ -127,7 +127,7 @@ var minval=0;
                     need.style.display = "none";
                 }
                 else{
-                    document.getElementById('loginStatus').innerHTML = "Please wait for me to verify your email. You should DM me on discord @fluff#2368";
+                    document.getElementById('loginStatus').innerHTML = "Please wait for me to verify your email. You should DM me on discord @fluff#2368 to speed up the process in case I don't check. ";
                 }
             });
             
@@ -261,7 +261,7 @@ function formatPts() {
             xScaleStartValue: minDate,
             xScaleStepWidth: (maxDate - minDate) / 7,
             scaleTimeFormat: "mmm d",
-            legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>"+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>"+"&nbsp"+"<%=datasets[i].label%><%}%>"
+            legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>"+"&nbsp&nbsp"+"<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>"+"&nbsp"+"<%=datasets[i].label%><%}%>"
         });
         var legend = chart.generateLegend();
         document.getElementById("chart-legend").innerHTML = legend;

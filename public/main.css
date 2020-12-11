@@ -143,6 +143,10 @@ th{
   border:1.5px dashed rgba(255,0,0,0.5);
 }
 
+#chard-legend{
+    text-align:center;
+}
+
 .scatter-legend-marker { 
   width: 14px; 
   height: 14px; 
