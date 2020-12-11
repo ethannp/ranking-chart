@@ -22,6 +22,7 @@
 
   <script src="jquery.js"></script>
   <link rel="stylesheet" href="main.css">
+  <link rel="icon" href="poopcrown.ico" />
 </head>
 
 <body>
@@ -29,35 +30,47 @@
     <h1>Ranking Chart</h1>
     <h3 id="curr">Current Ranking</h3>
     <br>
+    <div id="chart-legend"></div>
+    <p></p>
     <canvas id="chart"></canvas>
     <br></br>
-    <h4>Add data</h4>
-    <p>You do not need an account to submit data. Please do not abuse this feature.</p>
-    <p class="add">Score</p>
-    <input id="userscore" placeholder="#" class="score" type="number" min="0" max="999999">
-    <p class="add">Points to next bracket</p>
-    <input id="pointstonext" placeholder="#" class="score" type="number" min="0" max="999999">
-    <p class="add" id="percentlabel"></p>
-    <input id="percent" placeholder="#" class="score" type="number" min="0" max="99" step="0.1">
+    <button id="export">Export as image</button>
+    <p id="need">You need a verified account to submit data.</p>
+    <div id="form" style="display:none;">
+      <h4>Add data</h4>
+      <p class="add">Score</p>
+      <input id="userscore" placeholder="#" class="score" type="number" min="0" max="999999">
+      <p class="add">Points to next bracket</p>
+      <input id="pointstonext" placeholder="#" class="score" type="number" min="0" max="999999">
+      <p class="add" id="percentlabel"></p>
+      <input id="percent" placeholder="#" class="score" type="number" min="0" max="99" step="0.1">
 
-    <p class="add">Date and Time Recorded</p>
-    <p id="small">Enter this information as it is in YOUR TIMEZONE.</p>
-    <input id="datetime" type="datetime-local" class="time">
+      <p class="add">Date and Time Recorded</p>
+      <p id="small">Enter this information as it is in YOUR TIMEZONE.</p>
+      <input id="datetime" type="datetime-local" class="time">
 
-    <button id="submitdata">Submit Data</button>
-    <p id="submitvalid"></p>
-
+      <button id="submitdata">Submit Data</button>
+      <p id="submitvalid"></p>
     </div>
+
+  </div>
   <div id="login" class="box">
-    <h1>Login</h1>
-    <p>You'll only need to login if you are planning on administrating this database. Contact fluff#2368 for more info
-      (and to setup an account).</p>
+    <h1>Login/Signup</h1>
+    <p>You only need an account if you plan on updating this database regularly. Otherwise, please post your
+      crown/rainbow medal cutoffs in #8pt-to-28pct-scores-only channel of <a href="https://discord.gg/pad"
+        target="_blank">the PAD Community
+        Discord</a>, then one of the admins for this database will post it here.</p>
     <div class="container">
       <input id="user" type="email" placeholder="Email" class="login">
       <input id="pass" type="password" placeholder="Password" class="login">
       <p id="infoLogin"></p>
       <button id="loginBtn">Login</button>
       <button id="logoutBtn">Logout</button>
+      <p></p>
+      <p style="color:red;" id="loginStatus"></p>
+      <p id="enterinfo">Enter information above then <a onclick="createAcc()"><u>click here to create an
+            account.</u></a></p>
+
     </div>
   </div>
   <div id="admin" class="box" style="display:none;">
@@ -65,15 +78,24 @@
     <p>Push update each time you change a value, before you move on to the next section.</p>
     <h4>Edit Ranking Title</h4>
     <input id="title" placeholder="X Tournament" class="login">
-    <button id="updateTitle">Update Title</button>
+    <button id="updatetitle">Update Title</button>
     <p></p>
     <h4>Edit Start Date</h4>
+    <p>Set to the start date in your timezone.</p>
     <input id="datetimeADMIN" type="datetime-local" class="time">
     <button id="updateDate">Update Date</button>
     <p></p>
+    <h4>Edit graph</h4>
+    <p class="add">Minimum value (y-axis)</p>
+    <input id="min" placeholder="#" class="score" type="number">
+    <p class="add">Tick count</p>
+    <input id="tick" placeholder="#" class="score" type="number">
+    <button id="editgraph">Update graph</button>
+    <p></p>
     <h4>Edit JP Crown Data</h4>
-    <p>Formatted in your time zone. Enter data every 12 hours from <a href="https://takenama.hatenablog.com/" target="_blank">Takenama's blog</a></p>
-    
+    <p>Formatted in your time zone. Enter data every 12 hours from <a href="https://takenama.hatenablog.com/"
+        target="_blank">Takenama's blog</a></p>
+
     <table id="jptable" style="width:80%">
       <tr>
         <th>Date</th>

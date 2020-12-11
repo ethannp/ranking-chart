@@ -8,7 +8,7 @@ body {
 
 .box {
   background: white;
-  max-width: 700px;
+  max-width: 900px;
   padding: 32px 24px;
   border-radius: 3px;
   margin: auto;
@@ -32,7 +32,7 @@ body {
 #chart {
   margin: auto;
   width: 90%;
-  height: 350px;
+  height: 500px;
   display: block;
 }
 
@@ -64,21 +64,7 @@ a {
 #bottom {
   color: rgba(0, 0, 0, 0.6);
   text-align: center;
-  font-size: 13px;
-}
-
-.box button {
-  outline: 0;
-  border: 0;
-  display: block;
-  text-align: center;
-  background: #039be5;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: white;
-  padding: 10px;
-  border-radius: 4px;
-  cursor: pointer;
+  font-size: 14px;
 }
 
 .box button {
@@ -86,7 +72,6 @@ a {
 }
 
 .login {
-  display: block;
   outline: 0;
   background: #f2f2f2;
   width: 100%;
@@ -141,6 +126,41 @@ a {
 
 th{
   text-align:left;
+}
+
+.jpedit{
+  outline: 0;
+  background: #f3f3f3;
+  width: 50%;
+  border: 0;
+  padding: 5px;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  margin-top:5px;
+}
+
+.jpedit:invalid{
+  border:1.5px dashed rgba(255,0,0,0.5);
+}
+
+.scatter-legend-marker { 
+  width: 14px; 
+  height: 14px; 
+  display: inline-block; 
+}
+
+.box button {
+  outline: 0;
+  display:inline-block;
+  border: 0;
+  text-align: center;
+  background: #039be5;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
