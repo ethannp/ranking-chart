@@ -127,7 +127,7 @@ var minval=0;
                     need.style.display = "none";
                 }
                 else{
-                    document.getElementById('loginStatus').innerHTML = "Please wait for me to verify your email. It helps to DM me on discord @fluff#2368";
+                    document.getElementById('loginStatus').innerHTML = "Please wait for me to verify your email. You should DM me on discord @fluff#2368";
                 }
             });
             
@@ -249,8 +249,7 @@ function formatPts() {
             scaleShowVerticalLines: true,
             scaleGridLineWidth: 1,
             scaleOverride: true,
-            scaleLabel: "<%=value%>",
-            scaleArgLabel: "<%=value%>",
+            scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");},
             scaleSteps: tickcount,
             scaleStepWidth: 500,
             scaleStartValue: minval,
