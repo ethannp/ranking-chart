@@ -19,6 +19,8 @@ const need = document.getElementById("need");
 const datetimeAdmin = document.getElementById('updateDate');
 const datetimeval = document.getElementById('datetimeADMIN');
 const updGraph = document.getElementById('editgraph');
+const guide = document.getElementById('guide');
+const guidelink = document.getElementById('guidelink');
 var minPercent = 0;
 var maxPercent = 1;
 var minDate = 0;
@@ -81,6 +83,10 @@ var minval=0;
     db.ref('/info/tickCount').once('value').then((snapshot) => {
         tickcount = snapshot.node_.value_;
         document.getElementById('tick').value = tickcount;
+    });
+    db.ref('/info/guide').once('value').then((snapshot) => {
+        guide.href = snapshot.node_.value_;
+        guide.target = "_blank";
     });
 
 
@@ -272,6 +278,13 @@ txtPass.addEventListener("keyup", function (event) {
     }
 });
 
+txtUser.addEventListener("keyup", function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        loginBtn.click();
+    }
+});
+
 submitdata.addEventListener('click', e => {
     var enteredDate = (new Date(datetime.value)).getTime();
     /*var d = new Date();
@@ -326,4 +339,11 @@ updGraph.addEventListener('click', e=>{
     db.ref('/info/minVal').set(parseInt(minval));
     db.ref('/info/tickCount').set(parseInt(tick));
     window.location.reload();
-})
+});
+
+guidelink.addEventListener('click', e => {
+    const db = firebase.database();
+    var guide = document.getElementById('guideval').value;
+    db.ref('/info/guide').set(guide);
+    window.location.reload();
+});
