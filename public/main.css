@@ -6,6 +6,12 @@ body {
   padding: 0;
 }
 
+img{
+  max-width: 90%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 .box {
   background: white;
   max-width: 900px;

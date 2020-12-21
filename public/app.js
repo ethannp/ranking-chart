@@ -247,7 +247,7 @@ function formatPts() {
             scaleShowLabels: true,
             scaleShowHorizontalLines: true,
             scaleShowVerticalLines: true,
-            scaleGridLineWidth: 1,
+            scaleGridLineWidth: 2,
             scaleOverride: true,
             scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");},
             scaleSteps: tickcount,
