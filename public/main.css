@@ -56,6 +56,13 @@ p {
   color: rgba(0, 0, 0, 0.7);
 }
 
+label {
+  line-height: 140%;
+  margin: 16px 0 24px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
 a {
   line-height: 140%;
   margin: 16px 0 24px;
@@ -147,10 +154,6 @@ th{
 
 .jpedit:invalid{
   border:1.5px dashed rgba(255,0,0,0.5);
-}
-
-#chard-legend{
-    text-align:center;
 }
 
 .scatter-legend-marker { 

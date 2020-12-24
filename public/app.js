@@ -8,7 +8,6 @@ const admin = document.getElementById('admin');
 const score = document.getElementById('userscore');
 const pointsto = document.getElementById('pointstonext');
 const datetime = document.getElementById('datetime');
-const percent = document.getElementById('percent');
 const submitdata = document.getElementById('submitdata');
 const jptable = document.getElementById('jptable');
 const jpBtn = document.getElementById('updateJP');
@@ -23,6 +22,7 @@ const guide = document.getElementById('guide');
 const guidelink = document.getElementById('guidelink');
 var minPercent = 0;
 var maxPercent = 1;
+var medalCutoff = 0;
 var minDate = 0;
 var maxDate = 1;
 var pts = [];
@@ -30,8 +30,10 @@ var datapts = [];
 var jppts = [];
 var jpdatapts = [];
 var data = [];
-var tickcount=0;
-var minval=0;
+var medalpts = [];
+var medal = [];
+var tickcount = 0;
+var minval = 0;
 
 (function () {
     var firebaseConfig = {
@@ -51,17 +53,16 @@ var minval=0;
 
     const db = firebase.database();
 
-    //sync object changes
-    //db.on('value', snap => snap.val());
-
     db.ref('/info/minPercent').once('value').then((snapshot) => {
-        document.getElementById('percent').min = snapshot.node_.value_;
         minPercent = snapshot.node_.value_;
     });
     db.ref('/info/maxPercent').once('value').then((snapshot) => {
-        document.getElementById('percent').max = snapshot.node_.value_;
         maxPercent = snapshot.node_.value_;
-        document.getElementById("percentlabel").innerHTML = "Percent (Enter a number from " + minPercent + ".0 to " + maxPercent + ".0)";
+    });
+    db.ref('/info/medalCutoff').once('value').then((snapshot) => {
+        medalCutoff = snapshot.node_.value_;
+        document.getElementById("crownlabel").innerHTML = "Tracking crown (" + minPercent + "% to " + medalCutoff + "%)";
+        document.getElementById("medallabel").innerHTML = "Tracking medal (" + medalCutoff + "% to " + maxPercent + "%)";
     });
     db.ref('/info/minDate').once('value').then((snapshot) => {
         minDate = snapshot.node_.value_;
@@ -96,12 +97,12 @@ var minval=0;
         const auth = firebase.auth();
 
         auth.signInWithEmailAndPassword(email, pass)
-        .then((user) => {
-            document.getElementById('loginStatus').innerHTML ="";
-        })
-        .catch((error) => {
-            document.getElementById('loginStatus').innerHTML = "There was an error when logging in. "+error.message;
-        })
+            .then((user) => {
+                document.getElementById('loginStatus').innerHTML = "";
+            })
+            .catch((error) => {
+                document.getElementById('loginStatus').innerHTML = "There was an error when logging in. " + error.message;
+            })
     });
 
     logoutBtn.addEventListener('click', e => {
@@ -121,22 +122,23 @@ var minval=0;
             logoutBtn.style.display = "block";
             document.getElementById('enterinfo').innerHTML = "";
             infoLogin.innerHTML = "You are logged in as " + user.email.substring(0, user.email.indexOf("@"));
-            db.ref('/verified/'+firebase.auth().currentUser.uid).once('value').then((snapshot) => {
+            db.ref('/verified/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
                 if (snapshot.node_.value_) {
                     form.style.display = "block";
                     need.style.display = "none";
                 }
-                else{
+                else {
                     document.getElementById('loginStatus').innerHTML = "Please wait for me to verify your email. You should DM me on discord @fluff#2368 to speed up the process in case I don't check. ";
                 }
             });
-            
+
             db.ref('/admins/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
                 if (snapshot.node_.value_) {
                     admin.style.display = "block";
                     // jp data 86400000
                     var jpcrown = db.ref('jpcrowndata');
                     let counter = 0;
+                    jptable.innerHTML = "";
                     jpcrown.on('value', function (snapshot) {
                         snapshot.forEach(function (childSnapshot) {
                             var row = document.createElement("tr");
@@ -185,6 +187,15 @@ var minval=0;
         })
     });
 
+    var namedal = db.ref('namedaldata');
+    namedal.on('value', function (snapshot) {
+        medal = [];
+        medalpts = [];
+        snapshot.forEach(function (childSnapshot) {
+            medal.push(childSnapshot.val());
+        })
+    });
+
     var jpcrown = db.ref('jpcrowndata');
     jpcrown.on('value', function (snapshot) {
         jppts = [];
@@ -196,21 +207,27 @@ var minval=0;
     })
 }());
 
-function createAcc(){
+function createAcc() {
     const email = txtUser.value;
     const pass = txtPass.value;
     firebase.auth().createUserWithEmailAndPassword(email, pass)
-    .then((user) =>{
-        //signed in
-    })
-    .catch((error) => {
-        document.getElementById('loginStatus').innerHTML ="There was an error when creating your account. "+error.message;
-    })
+        .then((user) => {
+            //signed in
+        })
+        .catch((error) => {
+            document.getElementById('loginStatus').innerHTML = "There was an error when creating your account. " + error.message;
+        })
 }
 
 function formatPts() {
     pts.forEach(element => {
         datapts.push({
+            x: new Date(element.date),
+            y: element.score
+        })
+    });
+    medal.forEach(element => {
+        medalpts.push({
             x: new Date(element.date),
             y: element.score
         })
@@ -224,8 +241,12 @@ function formatPts() {
         count++;
     });
     datapts.shift();
-    datapts.sort(function(a,b){
-        return new Date(b.x)-new Date(a.x);
+    datapts.sort(function (a, b) {
+        return new Date(b.x) - new Date(a.x);
+    });
+    medalpts.shift();
+    medalpts.sort(function (a, b) {
+        return new Date(b.x) - new Date(a.x);
     });
     data = [
         {
@@ -234,7 +255,12 @@ function formatPts() {
             data: datapts
         },
         {
-            label: 'JP Crown',
+            label: 'NA Medal',
+            strokeColor: '#d71b90',
+            data: medalpts
+        },
+        {
+            label: 'JP Crown  ',
             strokeColor: '#007acc',
             data: jpdatapts
         }
@@ -249,9 +275,9 @@ function formatPts() {
             scaleShowVerticalLines: true,
             scaleGridLineWidth: 2,
             scaleOverride: true,
-            scaleLabel: function(label){return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");},
+            scaleLabel: function (label) { return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); },
             scaleSteps: tickcount,
-            scaleStepWidth: 500,
+            scaleStepWidth: 1000,
             scaleStartValue: minval,
             scaleType: "date",
             useUtc: false,
@@ -261,10 +287,10 @@ function formatPts() {
             xScaleStartValue: minDate,
             xScaleStepWidth: (maxDate - minDate) / 7,
             scaleTimeFormat: "mmm d",
-            legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>"+"&nbsp&nbsp"+"<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>"+"&nbsp"+"<%=datasets[i].label%><%}%>"
+            legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>" + "&nbsp&nbsp" + "<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>" + "&nbsp" + "<%=datasets[i].label%><%}%>"
         });
-        var legend = chart.generateLegend();
-        document.getElementById("chart-legend").innerHTML = legend;
+    var legend = chart.generateLegend();
+    document.getElementById("chart-legend").innerHTML = legend;
 }
 /*
         
@@ -289,16 +315,43 @@ submitdata.addEventListener('click', e => {
     /*var d = new Date();
     var localOffset = d.getTimezoneOffset() * 60000;
     var pst = (enteredDate + localOffset) + (3600000 * -8);*/
-    if (score.value.length != 0 && score.checkValidity() && pointsto.value.length != 0 && pointsto.checkValidity() && percent.checkValidity() && percent.value.length != 0 && enteredDate <= maxDate && enteredDate >= minDate) {
-        const db = firebase.database().ref("/nacrowndata/");
-        db.push().set({
-            date: enteredDate,
-            score: (parseInt(score.value) + parseInt(pointsto.value)),
-        })
-        score.value = "";
-        pointsto.value = "";
-        percent.value = "";
-        window.location.reload();
+    if (score.value.length != 0 && score.checkValidity()) {
+        if (pointsto.value.length != 0 && pointsto.checkValidity()) {
+            if (enteredDate <= maxDate && enteredDate >= minDate) {
+                if (document.getElementById('crownoption').checked) {
+                    const db = firebase.database().ref("/nacrowndata/");
+                    db.push().set({
+                        date: enteredDate,
+                        score: (parseInt(score.value) + parseInt(pointsto.value)),
+                    })
+                    score.value = "";
+                    pointsto.value = "";
+                    window.location.reload();
+                }
+                else if (document.getElementById('medaloption').checked) {
+                    const dbm = firebase.database().ref("/namedaldata/");
+                    dbm.push().set({
+                        date: enteredDate,
+                        score: (parseInt(score.value) + parseInt(pointsto.value)),
+                    })
+                    score.value = "";
+                    pointsto.value = "";
+                    window.location.reload();
+                }
+                else{
+                    document.getElementById('submitvalid').innerHTML = "No score location button was selected";
+                }
+            }
+            else {
+                document.getElementById('submitvalid').innerHTML = "The inputted date is invalid.";
+            }
+        }
+        else {
+            document.getElementById('submitvalid').innerHTML = "The inputted points to next bracket score is invalid.";
+        }
+    }
+    else {
+        document.getElementById('submitvalid').innerHTML = "The inputted score is invalid.";
     }
 });
 
@@ -310,28 +363,28 @@ jpBtn.addEventListener('click', e => {
     window.location.reload();
 });
 
-exportBtn.addEventListener('click', e=>{
+exportBtn.addEventListener('click', e => {
     var link = document.createElement('a');
-    link.download = ranking.innerHTML.substring(17)+'.png';
+    link.download = ranking.innerHTML.substring(17) + '.png';
     link.href = document.getElementById('chart').toDataURL()
     link.click();
 })
 
-updTitle.addEventListener('click', e=>{
+updTitle.addEventListener('click', e => {
     const db = firebase.database();
     db.ref('/info/name').set(document.getElementById('title').value);
     window.location.reload();
 })
 
-datetimeAdmin.addEventListener('click', e=> {
+datetimeAdmin.addEventListener('click', e => {
     const db = firebase.database();
     var enteredDate = (new Date(datetimeval.value)).getTime();
     db.ref('/info/minDate').set(enteredDate);
-    db.ref('/info/maxDate').set(enteredDate+(86400000*7));
+    db.ref('/info/maxDate').set(enteredDate + (86400000 * 7));
     window.location.reload();
 });
 
-updGraph.addEventListener('click', e=>{
+updGraph.addEventListener('click', e => {
     const db = firebase.database();
     var minval = document.getElementById('min').value;
     var tick = document.getElementById('tick').value;

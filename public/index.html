@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ranking Chart</title>
+  <title>PAD Ranking Chart</title>
 
   <!-- update the version number as needed -->
   <script defer src="/__/firebase/8.1.2/firebase-app.js"></script>
@@ -23,11 +23,15 @@
   <script src="jquery.js"></script>
   <link rel="stylesheet" href="main.css">
   <link rel="icon" href="poopcrown.ico" />
+  <meta name="google-site-verification" content="1eMV9opKWd95mYPWXQuK24EXuqtBIy1_io_NQVPLXHM" />
+  <meta name="keywords" content = "pad, ranking, ranking chart, pad ranking chart, pad ranking, puzzle and dragons, ranking guide">
+  <meta name="description" content="Shows an updated chart of cutoff scores for the latest PAD ranking dungeon.">
+  <meta name="author" content="fluff">
 </head>
 
 <body>
   <div id="top" class="box">
-    <h1>Ranking Chart</h1>
+    <h1>PAD Ranking Chart</h1>
     <h3 id="curr">Current Ranking</h3>
     <p><a id="guide">Ranking Guide</a></p>
     <br>
@@ -43,15 +47,24 @@
       <input id="userscore" placeholder="#" class="score" type="number" min="0" max="999999">
       <p class="add">Points to next bracket</p>
       <input id="pointstonext" placeholder="#" class="score" type="number" min="0" max="999999">
-      <p class="add" id="percentlabel"></p>
-      <input id="percent" placeholder="#" class="score" type="number" min="0" max="99" step="0.1">
-
+      <div class="option">
+        <p class="add" id="percentlabel">Where is your score?</p>
+        <div class="radio">
+          <input type="radio" name="radio" id="crownoption" checked>
+          <label for="crownoption" id="crownlabel">Tracking crown ()</label><br>
+        </div>
+        <div class="radio">
+          <input type="radio" name="radio" id="medaloption">
+          <label for="medaloption" id="medallabel">Tracking medal ()</label>
+        </div>
+      </div>
+      <br>
       <p class="add">Date and Time Recorded</p>
       <p id="small">Enter this information as it is in YOUR TIMEZONE.</p>
       <input id="datetime" type="datetime-local" class="time">
 
       <button id="submitdata">Submit Data</button>
-      <p id="submitvalid"></p>
+      <p style="color:red;" id="submitvalid"></p>
     </div>
 
   </div>
@@ -94,7 +107,7 @@
     <button id="editgraph">Update graph</button>
     <p></p>
     <h4>Edit Guide Link</h4>
-    <input id="guideval" placeholder = "https://docs.google.com/document/d/..." class="login">
+    <input id="guideval" placeholder="https://docs.google.com/document/d/..." class="login">
     <button id="guidelink">Update Guide Link</button>
     <p></p>
     <h4>Edit JP Crown Data</h4>
