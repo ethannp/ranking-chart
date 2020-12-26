@@ -34,6 +34,7 @@ var medalpts = [];
 var medal = [];
 var tickcount = 0;
 var minval = 0;
+var tickspace = 0;
 
 (function () {
     var firebaseConfig = {
@@ -84,6 +85,10 @@ var minval = 0;
     db.ref('/info/tickCount').once('value').then((snapshot) => {
         tickcount = snapshot.node_.value_;
         document.getElementById('tick').value = tickcount;
+    });
+    db.ref('/info/tickSpace').once('value').then((snapshot) => {
+        tickspace = snapshot.node_.value_;
+        document.getElementById('tickspace').value = tickspace;
     });
     db.ref('/info/guide').once('value').then((snapshot) => {
         guide.href = snapshot.node_.value_;
@@ -277,7 +282,7 @@ function formatPts() {
             scaleOverride: true,
             scaleLabel: function (label) { return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); },
             scaleSteps: tickcount,
-            scaleStepWidth: 1000,
+            scaleStepWidth: tickspace,
             scaleStartValue: minval,
             scaleType: "date",
             useUtc: false,
@@ -388,8 +393,10 @@ updGraph.addEventListener('click', e => {
     const db = firebase.database();
     var minval = document.getElementById('min').value;
     var tick = document.getElementById('tick').value;
+    var tickspace = document.getElementById('tickspace').value;
     db.ref('/info/minVal').set(parseInt(minval));
     db.ref('/info/tickCount').set(parseInt(tick));
+    db.ref('/info/tickSpace').set(parseInt(tickspace));
     window.location.reload();
 });
 
