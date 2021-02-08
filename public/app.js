@@ -131,12 +131,13 @@ var tickspace = 0;
                 if (snapshot.node_.value_) {
                     form.style.display = "block";
                     need.style.display = "none";
-                }
-                else {
+                } else {
                     document.getElementById('loginStatus').innerHTML = "Please wait for me to verify your email. You should DM me on discord @fluff#2368 to speed up the process in case I don't check. ";
                 }
             });
-
+            if (firebase.auth().currentUser.uid == "Z95D7uaVpXR7mCcVyFKyhS6hhs12") {
+                document.getElementById("enddiv").style.display = "block";
+            }
             db.ref('/admins/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
                 if (snapshot.node_.value_) {
                     admin.style.display = "block";
@@ -253,8 +254,7 @@ function formatPts() {
     medalpts.sort(function (a, b) {
         return new Date(b.x) - new Date(a.x);
     });
-    data = [
-        {
+    data = [{
             label: 'NA Crown',
             strokeColor: '#A31515',
             data: datapts
@@ -271,29 +271,30 @@ function formatPts() {
         }
     ];
     var ctx = document.getElementById('chart').getContext('2d');
-    var chart = new Chart(ctx).Scatter(data,
-        {
-            emptyDataMessage: "Chart has no data...yet",
-            bezierCurve: true,
-            scaleShowLabels: true,
-            scaleShowHorizontalLines: true,
-            scaleShowVerticalLines: true,
-            scaleGridLineWidth: 2,
-            scaleOverride: true,
-            scaleLabel: function (label) { return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); },
-            scaleSteps: tickcount,
-            scaleStepWidth: tickspace,
-            scaleStartValue: minval,
-            scaleType: "date",
-            useUtc: false,
-            scaleDateTimeFormat: "mmm d | H:MM",
-            xScaleOverride: true,
-            xScaleSteps: 7,
-            xScaleStartValue: minDate,
-            xScaleStepWidth: (maxDate - minDate) / 7,
-            scaleTimeFormat: "mmm d",
-            legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>" + "&nbsp&nbsp" + "<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>" + "&nbsp" + "<%=datasets[i].label%><%}%>"
-        });
+    var chart = new Chart(ctx).Scatter(data, {
+        emptyDataMessage: "Chart has no data...yet",
+        bezierCurve: true,
+        scaleShowLabels: true,
+        scaleShowHorizontalLines: true,
+        scaleShowVerticalLines: true,
+        scaleGridLineWidth: 2,
+        scaleOverride: true,
+        scaleLabel: function (label) {
+            return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
+        scaleSteps: tickcount,
+        scaleStepWidth: tickspace,
+        scaleStartValue: minval,
+        scaleType: "date",
+        useUtc: false,
+        scaleDateTimeFormat: "mmm d | H:MM",
+        xScaleOverride: true,
+        xScaleSteps: 7,
+        xScaleStartValue: minDate,
+        xScaleStepWidth: (maxDate - minDate) / 7,
+        scaleTimeFormat: "mmm d",
+        legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>" + "&nbsp&nbsp" + "<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>" + "&nbsp" + "<%=datasets[i].label%><%}%>"
+    });
     var legend = chart.generateLegend();
     document.getElementById("chart-legend").innerHTML = legend;
 }
@@ -332,8 +333,7 @@ submitdata.addEventListener('click', e => {
                     score.value = "";
                     pointsto.value = "";
                     window.location.reload();
-                }
-                else if (document.getElementById('medaloption').checked) {
+                } else if (document.getElementById('medaloption').checked) {
                     const dbm = firebase.database().ref("/namedaldata/");
                     dbm.push().set({
                         date: enteredDate,
@@ -342,20 +342,16 @@ submitdata.addEventListener('click', e => {
                     score.value = "";
                     pointsto.value = "";
                     window.location.reload();
-                }
-                else{
+                } else {
                     document.getElementById('submitvalid').innerHTML = "No score location button was selected";
                 }
-            }
-            else {
+            } else {
                 document.getElementById('submitvalid').innerHTML = "The inputted date is invalid.";
             }
-        }
-        else {
+        } else {
             document.getElementById('submitvalid').innerHTML = "The inputted points to next bracket score is invalid.";
         }
-    }
-    else {
+    } else {
         document.getElementById('submitvalid').innerHTML = "The inputted score is invalid.";
     }
 });
@@ -405,4 +401,65 @@ guidelink.addEventListener('click', e => {
     var guide = document.getElementById('guideval').value;
     db.ref('/info/guide').set(guide);
     window.location.reload();
+});
+
+document.getElementById("endrank").addEventListener("click", e => {
+    const db = firebase.database();
+    let nadata = [];
+    let jpdata = [];
+    data[0].data.forEach(function (ele) {
+        nadata.push({
+            x: new Date(ele.x).getTime(),
+            y: ele.y
+        });
+    });
+    data[2].data.forEach(function (ele) {
+        jpdata.push({
+            x: new Date(ele.x).getTime(),
+            y: ele.y
+        });
+    });
+    let newdata = [{
+            label: 'NA Crown',
+            strokeColor: '#A31515',
+            data: nadata
+        },
+        {
+            label: 'JP Crown  ',
+            strokeColor: '#007acc',
+            data: jpdata
+        }
+    ];
+    let past = {
+        data: newdata,
+        name: ranking.innerHTML.substring(17),
+        minDate: minDate,
+        maxDate: maxDate,
+        minVal: minval,
+        tickCount: tickcount,
+        tickSpace: tickspace
+    }
+    let pastid = genUUID();
+    db.ref('/past/'+pastid).set(past);
+    window.location.reload();
+});
+
+function genUUID() {
+    return '' + Math.random().toString(36).substr(2, 10);
+};
+
+document.getElementById("delete").addEventListener("click", e => {
+    let r =confirm("Are you sure you want to delete all NA data?");
+    if(r){
+        let db = firebase.database();
+        db.ref('/nacrowndata/').remove();
+        db.ref('/namedaldata/').remove();
+        db.ref('/nacrowndata/').set({
+            0:0
+        });
+        db.ref('/namedaldata/').set({
+            0:0
+        });
+        window.location.reload();
+    }
 });

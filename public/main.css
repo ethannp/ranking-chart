@@ -35,7 +35,7 @@ img{
   margin: 0 0 8px;
 }
 
-#chart {
+canvas {
   margin: auto;
   width: 90%;
   height: 500px;
@@ -53,7 +53,7 @@ p {
   line-height: 140%;
   margin: 16px 0 24px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 label {

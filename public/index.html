@@ -24,7 +24,8 @@
   <link rel="stylesheet" href="main.css">
   <link rel="icon" href="poopcrown.ico" />
   <meta name="google-site-verification" content="1eMV9opKWd95mYPWXQuK24EXuqtBIy1_io_NQVPLXHM" />
-  <meta name="keywords" content = "pad, ranking, ranking chart, pad ranking chart, pad ranking, puzzle and dragons, ranking guide">
+  <meta name="keywords"
+    content="pad, ranking, ranking chart, pad ranking chart, pad ranking, puzzle and dragons, ranking guide">
   <meta name="description" content="Shows an updated chart of cutoff scores for the latest PAD ranking dungeon.">
   <meta name="author" content="fluff">
 </head>
@@ -33,8 +34,7 @@
   <div id="top" class="box">
     <h1>PAD Ranking Chart</h1>
     <h3 id="curr">Current Ranking</h3>
-    <p><a id="guide">Ranking Guide</a></p>
-    <br>
+    <p><a id="guide">Ranking Guide</a><br><br><a id="past" href="past.html">Past Charts</a></p>
     <div id="chart-legend"></div>
     <p></p>
     <canvas id="chart"></canvas>
@@ -71,9 +71,9 @@
   <div id="login" class="box">
     <h1>Login/Signup</h1>
     <p>You only need an account if you plan on updating this database regularly. Otherwise, please post your
-      crown/rainbow medal cutoffs in #8pt-to-28pct-scores-only channel of <a href="https://discord.gg/pad"
+      crown/rainbow medal cutoffs to the cutoff channel of <a href="https://discord.gg/pad"
         target="_blank">the PAD Community
-        Discord</a>, then one of the admins for this database will post it here.</p>
+        Discord</a>.</p>
     <div class="container">
       <input id="user" type="email" placeholder="Email" class="login">
       <input id="pass" type="password" placeholder="Password" class="login">
@@ -90,6 +90,13 @@
   <div id="admin" class="box" style="display:none;">
     <h1>Admin Panel</h1>
     <p>Push update each time you change a value, before you move on to the next section.</p>
+    <div id="enddiv" style="display:none;">
+      <h4>Save Ranking</h4>
+      <p>Saves all data into a past chart</p>
+      <button id="endrank">Save Ranking</button>
+      <p></p>
+      <button id="delete">Delete NA Data</button>
+    </div>
     <h4>Edit Ranking Title</h4>
     <input id="title" placeholder="X Tournament" class="login">
     <button id="updatetitle">Update Title</button>
@@ -126,6 +133,7 @@
     <button id="updateJP">Update JP Crown Data</button>
   </div>
   <p id="bottom">made by fluff#2368</p>
+  <p id="bottom">feel free to dm me any suggestions :)</p>
 
   <script defer src="app.js"></script>
 </body>

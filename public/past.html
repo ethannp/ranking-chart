@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PAD Ranking Chart | Past Data</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.1.2/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.1.2/firebase-database.js"></script>
+    <script defer src="/__/firebase/8.1.2/firebase-auth.js"></script>
+    <!-- 
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+    <script src='static/Chart.Core.min.js'></script>
+    <script src="static/Chart.Scatter.min.js"></script>
+
+    <script src="jquery.js"></script>
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" href="poopcrown.ico" />
+    <meta name="google-site-verification" content="1eMV9opKWd95mYPWXQuK24EXuqtBIy1_io_NQVPLXHM" />
+    <meta name="keywords"
+        content="pad, ranking, ranking chart, pad ranking chart, pad ranking, puzzle and dragons, ranking guide">
+    <meta name="description" content="Shows an updated chart of cutoff scores for the latest PAD ranking dungeon.">
+    <meta name="author" content="fluff">
+</head>
+
+<body>
+    <div id="top" class="box">
+        <h1>PAD Ranking Chart</h1>
+        <h3>Past Rankings</h3>
+        <p><a href="/">Go back home</a></p>
+        <div id="chart-legend"></div>
+        <p></p>
+        <div id="allpast"></div>
+    </div>
+    <p id="bottom">made by fluff#2368</p>
+
+    <script defer src="past.js"></script>
+</body>
+
+</html>
