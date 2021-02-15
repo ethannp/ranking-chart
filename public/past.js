@@ -19,14 +19,15 @@ $(async function () {
     loadPast();
 });
 
-async function loadPast(){
+async function loadPast() {
     let pastchart = await getChart();
     const allpast = document.getElementById("allpast");
+    let i = 0;
     pastchart.forEach(function (item) {
         let canv = document.createElement("canvas");
         let ctx = canv.getContext('2d');
-        canv.height="400";
-        canv.width=document.getElementById("top").offsetWidth*0.9;
+        canv.height = "400";
+        canv.width = document.getElementById("top").offsetWidth * 0.9;
         let data = item.data;
         var chart = new Chart(ctx).Scatter(data, {
             emptyDataMessage: "Chart has no data...yet",
@@ -56,20 +57,27 @@ async function loadPast(){
         document.getElementById("chart-legend").innerHTML = legend;
         let br = document.createElement("br");
         let title = document.createElement("h4");
-        title.innerHTML=item.name;
+        let hr = document.createElement("hr");
+        title.innerHTML = item.name;
         allpast.appendChild(title);
         allpast.appendChild(canv);
-        allpast.appendChild(br);
+        if (pastchart.length-1 != i) {
+            hr.style.marginTop = "20px";
+            allpast.appendChild(hr);
+            allpast.appendChild(br);
+        }
+        i++;
     });
 }
 
-async function getChart(){
+async function getChart() {
     const db = firebase.database().ref("/past/");
     let snap = await db.once("value");
     let charts = [];
     let value = snap.val();
-    for(const item in value){
+    for (const item in value) {
         charts.push(value[item]);
     }
+    charts = charts.reverse();
     return charts;
 }

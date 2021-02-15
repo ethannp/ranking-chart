@@ -99,12 +99,12 @@ a {
   display: block;
   outline: 0;
   background: #f2f2f2;
-  width: 20%;
   border: 0;
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
   margin-bottom: 20px;
+  min-width:200px;
 }
 .score:invalid{
   border:2px dashed rgba(255,0,0,0.5);
@@ -121,6 +121,7 @@ a {
   font-size: 14px;
   margin-bottom: 20px;
   font-family:Roboto;
+  min-width:300px;
 }
 
 #datetime:invalid{
@@ -150,6 +151,7 @@ th{
   box-sizing: border-box;
   margin-bottom: 5px;
   margin-top:5px;
+  min-width:100px;
 }
 
 .jpedit:invalid{
@@ -184,11 +186,5 @@ th{
   }
   body {
     border-top: 16px solid #ffa100;
-  }
-  .time{
-    width: 55%;
-  }
-  .score{
-    width:50%;
   }
 }

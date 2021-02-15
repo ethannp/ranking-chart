@@ -463,3 +463,9 @@ document.getElementById("delete").addEventListener("click", e => {
         window.location.reload();
     }
 });
+
+document.getElementById("pointstonext").addEventListener("keypress", function(e) {
+	if (e.key == "Enter") {
+		submitdata.click();
+	}
+});

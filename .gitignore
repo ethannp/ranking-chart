@@ -9,7 +9,6 @@ firebase-debug.*.log*
 firebase.json
 database.rules.json
 .gitattributes
-.github/workflows/
 
 # Firebase cache
 .firebase/
