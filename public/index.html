@@ -2,12 +2,22 @@
 <html>
 
 <head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-185293639-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-185293639-1');
+  </script>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PAD Ranking Chart</title>
 
   <!-- update the version number as needed -->
   <script defer src="/__/firebase/8.1.2/firebase-app.js"></script>
+  <script defer src="/__/firebase/8.2.10/firebase-analytics.js"></script>
   <!-- include only the Firebase features as you need -->
   <script defer src="/__/firebase/8.1.2/firebase-database.js"></script>
   <script defer src="/__/firebase/8.1.2/firebase-auth.js"></script>
@@ -70,9 +80,10 @@
   </div>
   <div id="login" class="box">
     <h1>Login/Signup</h1>
-    <p>You only need an account if you plan on updating this database regularly (in other words, you have an account that regularly tracks crown/medal). Otherwise, please post your
-      crown/rainbow medal cutoffs to the cutoff channel of <a href="https://discord.gg/pad"
-        target="_blank">the PAD Community
+    <p>You only need an account if you plan on updating this database regularly (in other words, you have an account
+      that regularly tracks crown/medal). Otherwise, please post your
+      crown/rainbow medal cutoffs to the cutoff channel of <a href="https://discord.gg/pad" target="_blank">the PAD
+        Community
         Discord</a>.</p>
     <div class="container">
       <input id="user" type="email" placeholder="Email" class="login">

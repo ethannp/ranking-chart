@@ -78,6 +78,7 @@ async function getChart() {
     for (const item in value) {
         charts.push(value[item]);
     }
+    charts.sort((a, b) => (a.minDate > b.minDate) ? 1 : -1);
     charts = charts.reverse();
     return charts;
 }
