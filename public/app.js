@@ -261,6 +261,8 @@ function formatPts() {
         xScaleStartValue: minDate,
         xScaleStepWidth: (maxDate - minDate) / 7,
         scaleTimeFormat: "mmm d",
+        responsive: true,
+        maintainAspectRatio: false,
         legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>" + "&nbsp&nbsp" + "<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>" + "&nbsp" + "<%=datasets[i].label%><%}%>"
     });
     var legend = chart.generateLegend();

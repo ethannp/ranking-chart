@@ -26,6 +26,7 @@ img{
 
 #top {
   margin: 75px auto 16px;
+  display:block;
 }
 
 .box h2 {
