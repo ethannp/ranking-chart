@@ -1,8 +1,4 @@
 const ranking = document.getElementById('curr');
-const txtUser = document.getElementById('user');
-const txtPass = document.getElementById('pass');
-const loginBtn = document.getElementById('loginBtn');
-const logoutBtn = document.getElementById('logoutBtn');
 const infoLogin = document.getElementById('infoLogin');
 const admin = document.getElementById('admin');
 const score = document.getElementById('userscore');
@@ -17,12 +13,9 @@ const form = document.getElementById("form");
 const need = document.getElementById("need");
 const datetimeAdmin = document.getElementById('updateDate');
 const datetimeval = document.getElementById('datetimeADMIN');
-const updGraph = document.getElementById('editgraph');
 const guide = document.getElementById('guide');
-const guidelink = document.getElementById('guidelink');
 var minPercent = 0;
 var maxPercent = 1;
-var medalCutoff = 0;
 var minDate = 0;
 var maxDate = 1;
 var pts = [];
@@ -30,8 +23,6 @@ var datapts = [];
 var jppts = [];
 var jpdatapts = [];
 var data = [];
-var medalpts = [];
-var medal = [];
 var tickcount = 0;
 var minval = 0;
 var tickspace = 0;
@@ -60,14 +51,11 @@ var tickspace = 0;
     db.ref('/info/maxPercent').once('value').then((snapshot) => {
         maxPercent = snapshot.node_.value_;
     });
-    db.ref('/info/medalCutoff').once('value').then((snapshot) => {
-        medalCutoff = snapshot.node_.value_;
-        document.getElementById("crownlabel").innerHTML = "Tracking crown (" + minPercent + "% to " + medalCutoff + "%)";
-        document.getElementById("medallabel").innerHTML = "Tracking medal (" + medalCutoff + "% to " + maxPercent + "%)";
-    });
     db.ref('/info/minDate').once('value').then((snapshot) => {
         minDate = snapshot.node_.value_;
         datetime.min = (new Date(minDate)).toISOString();
+        let tzoffset = (new Date()).getTimezoneOffset() * 60000;
+        document.getElementById("datetimeADMIN").value = (new Date(minDate - tzoffset)).toISOString().slice(0, -1);
     });
     db.ref('/info/maxDate').once('value').then((snapshot) => {
         maxDate = snapshot.node_.value_;
@@ -77,6 +65,7 @@ var tickspace = 0;
     });
     db.ref('/info/name').once('value').then((snapshot) => {
         ranking.innerHTML = "Current Ranking: " + snapshot.node_.value_;
+        document.getElementById("title").value = snapshot.node_.value_;
     });
     db.ref('/info/minVal').once('value').then((snapshot) => {
         minval = snapshot.node_.value_;
@@ -91,14 +80,16 @@ var tickspace = 0;
         document.getElementById('tickspace').value = tickspace;
     });
     db.ref('/info/guide').once('value').then((snapshot) => {
-        guide.href = snapshot.node_.value_;
+        let guidelink = snapshot.node_.value_;
+        guide.href = guidelink;
         guide.target = "_blank";
+        document.getElementById("guideval").value = guidelink;
     });
 
 
-    loginBtn.addEventListener('click', e => {
-        const email = txtUser.value;
-        const pass = txtPass.value;
+    document.getElementById('loginBtn').addEventListener('click', e => {
+        const email = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
         const auth = firebase.auth();
 
         auth.signInWithEmailAndPassword(email, pass)
@@ -110,7 +101,7 @@ var tickspace = 0;
             })
     });
 
-    logoutBtn.addEventListener('click', e => {
+    document.getElementById('logoutBtn').addEventListener('click', e => {
         firebase.auth().signOut();
         document.getElementById('enterinfo').innerHTML = "Enter information above then <a onclick=\"createAcc()\"><u>click here to create an account.</u></a>";
         document.getElementById('loginStatus').innerHTML = "";
@@ -119,12 +110,12 @@ var tickspace = 0;
     // logging in/out
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
-            txtUser.value = "";
-            txtPass.value = "";
-            txtUser.style.display = "none";
-            txtPass.style.display = "none";
-            loginBtn.style.display = "none";
-            logoutBtn.style.display = "block";
+            document.getElementById('user').value = "";
+            document.getElementById('pass').value = "";
+            document.getElementById('user').style.display = "none";
+            document.getElementById('pass').style.display = "none";
+            document.getElementById('loginBtn').style.display = "none";
+            document.getElementById('logoutBtn').style.display = "block";
             document.getElementById('enterinfo').innerHTML = "";
             infoLogin.innerHTML = "You are logged in as " + user.email.substring(0, user.email.indexOf("@"));
             db.ref('/verified/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
@@ -132,7 +123,7 @@ var tickspace = 0;
                     form.style.display = "block";
                     need.style.display = "none";
                 } else {
-                    document.getElementById('loginStatus').innerHTML = "Please wait for me to verify your email. You should DM me on discord @fluff#2368 to speed up the process in case I don't check. ";
+                    document.getElementById('loginStatus').innerHTML = "Please DM me on discord @fluff#2368 indicating you've created an account. ";
                 }
             });
             if (firebase.auth().currentUser.uid == "Z95D7uaVpXR7mCcVyFKyhS6hhs12") {
@@ -154,6 +145,7 @@ var tickspace = 0;
                             var input = document.createElement("input");
                             input.id = 'jpedit' + counter;
                             input.className = "jpedit";
+                            input.addEventListener("click", e => {input.select();});
                             var cell2Text = document.createTextNode("");
                             input.appendChild(cell2Text);
                             input.value = childSnapshot.val();
@@ -171,10 +163,10 @@ var tickspace = 0;
                 }
             });
         } else {
-            loginBtn.style.display = "block";
-            logoutBtn.style.display = "none";
-            txtUser.style.display = "block";
-            txtPass.style.display = "block";
+            document.getElementById('loginBtn').style.display = "block";
+            document.getElementById('logoutBtn').style.display = "none";
+            document.getElementById('user').style.display = "block";
+            document.getElementById('pass').style.display = "block";
             infoLogin.innerHTML = "";
             admin.style.display = "none";
             form.style.display = "none";
@@ -193,15 +185,6 @@ var tickspace = 0;
         })
     });
 
-    var namedal = db.ref('namedaldata');
-    namedal.on('value', function (snapshot) {
-        medal = [];
-        medalpts = [];
-        snapshot.forEach(function (childSnapshot) {
-            medal.push(childSnapshot.val());
-        })
-    });
-
     var jpcrown = db.ref('jpcrowndata');
     jpcrown.on('value', function (snapshot) {
         jppts = [];
@@ -214,8 +197,8 @@ var tickspace = 0;
 }());
 
 function createAcc() {
-    const email = txtUser.value;
-    const pass = txtPass.value;
+    const email = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
     firebase.auth().createUserWithEmailAndPassword(email, pass)
         .then((user) => {
             //signed in
@@ -232,12 +215,6 @@ function formatPts() {
             y: element.score
         })
     });
-    medal.forEach(element => {
-        medalpts.push({
-            x: new Date(element.date),
-            y: element.score
-        })
-    });
     let count = 0;
     jppts.forEach(element => {
         jpdatapts.push({
@@ -250,19 +227,10 @@ function formatPts() {
     datapts.sort(function (a, b) {
         return new Date(b.x) - new Date(a.x);
     });
-    medalpts.shift();
-    medalpts.sort(function (a, b) {
-        return new Date(b.x) - new Date(a.x);
-    });
     data = [{
             label: 'NA Crown',
             strokeColor: '#A31515',
             data: datapts
-        },
-        {
-            label: 'NA Medal',
-            strokeColor: '#d71b90',
-            data: medalpts
         },
         {
             label: 'JP Crown  ',
@@ -302,17 +270,17 @@ function formatPts() {
         
 */
 
-txtPass.addEventListener("keyup", function (event) {
+document.getElementById('pass').addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        loginBtn.click();
+        document.getElementById('loginBtn').click();
     }
 });
 
-txtUser.addEventListener("keyup", function (event) {
+document.getElementById('user').addEventListener("keyup", function (event) {
     if (event.key === "Enter") {
         event.preventDefault();
-        loginBtn.click();
+        document.getElementById('loginBtn').click();
     }
 });
 
@@ -324,27 +292,14 @@ submitdata.addEventListener('click', e => {
     if (score.value.length != 0 && score.checkValidity()) {
         if (pointsto.value.length != 0 && pointsto.checkValidity()) {
             if (enteredDate <= maxDate && enteredDate >= minDate) {
-                if (document.getElementById('crownoption').checked) {
-                    const db = firebase.database().ref("/nacrowndata/");
-                    db.push().set({
-                        date: enteredDate,
-                        score: (parseInt(score.value) + parseInt(pointsto.value)),
-                    })
-                    score.value = "";
-                    pointsto.value = "";
-                    window.location.reload();
-                } else if (document.getElementById('medaloption').checked) {
-                    const dbm = firebase.database().ref("/namedaldata/");
-                    dbm.push().set({
-                        date: enteredDate,
-                        score: (parseInt(score.value) + parseInt(pointsto.value)),
-                    })
-                    score.value = "";
-                    pointsto.value = "";
-                    window.location.reload();
-                } else {
-                    document.getElementById('submitvalid').innerHTML = "No score location button was selected";
-                }
+                const db = firebase.database().ref("/nacrowndata/");
+                db.push().set({
+                    date: enteredDate,
+                    score: (parseInt(score.value) + parseInt(pointsto.value)),
+                })
+                score.value = "";
+                pointsto.value = "";
+                window.location.reload();
             } else {
                 document.getElementById('submitvalid').innerHTML = "The inputted date is invalid.";
             }
@@ -356,13 +311,6 @@ submitdata.addEventListener('click', e => {
     }
 });
 
-jpBtn.addEventListener('click', e => {
-    const db = firebase.database();
-    for (let i = 0; i < 15; i++) {
-        db.ref('/jpcrowndata/' + i).set(document.getElementById('jpedit' + i).value);
-    }
-    window.location.reload();
-});
 
 exportBtn.addEventListener('click', e => {
     var link = document.createElement('a');
@@ -371,35 +319,29 @@ exportBtn.addEventListener('click', e => {
     link.click();
 })
 
-updTitle.addEventListener('click', e => {
-    const db = firebase.database();
-    db.ref('/info/name').set(document.getElementById('title').value);
-    window.location.reload();
-})
 
-datetimeAdmin.addEventListener('click', e => {
+document.getElementById('updateAll').addEventListener('click', e => {
     const db = firebase.database();
-    var enteredDate = (new Date(datetimeval.value)).getTime();
-    db.ref('/info/minDate').set(enteredDate);
-    db.ref('/info/maxDate').set(enteredDate + (86400000 * 7));
-    window.location.reload();
-});
+    var guide = document.getElementById('guideval').value;
+    db.ref('/info/guide').set(guide);
 
-updGraph.addEventListener('click', e => {
-    const db = firebase.database();
     var minval = document.getElementById('min').value;
     var tick = document.getElementById('tick').value;
     var tickspace = document.getElementById('tickspace').value;
     db.ref('/info/minVal').set(parseInt(minval));
     db.ref('/info/tickCount').set(parseInt(tick));
     db.ref('/info/tickSpace').set(parseInt(tickspace));
-    window.location.reload();
-});
+    
+    var enteredDate = (new Date(datetimeval.value)).getTime();
+    db.ref('/info/minDate').set(enteredDate);
+    db.ref('/info/maxDate').set(enteredDate + (86400000 * 7));
 
-guidelink.addEventListener('click', e => {
-    const db = firebase.database();
-    var guide = document.getElementById('guideval').value;
-    db.ref('/info/guide').set(guide);
+    db.ref('/info/name').set(document.getElementById('title').value);
+
+    for (let i = 0; i < 15; i++) {
+        db.ref('/jpcrowndata/' + i).set(document.getElementById('jpedit' + i).value);
+    }
+
     window.location.reload();
 });
 
@@ -453,11 +395,7 @@ document.getElementById("delete").addEventListener("click", e => {
     if(r){
         let db = firebase.database();
         db.ref('/nacrowndata/').remove();
-        db.ref('/namedaldata/').remove();
         db.ref('/nacrowndata/').set({
-            0:0
-        });
-        db.ref('/namedaldata/').set({
             0:0
         });
         window.location.reload();
