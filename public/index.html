@@ -5,7 +5,10 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-185293639-1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
     gtag('js', new Date());
 
     gtag('config', 'UA-185293639-1');
@@ -38,6 +41,7 @@
   <div id="top" class="box">
     <h1>PAD Ranking Chart</h1>
     <h3 id="curr">Current Ranking</h3>
+    <p id="note"></p>
     <p><a id="guide">Ranking Guide</a><br><br><a id="past" href="past.html">Past Charts</a></p>
     <div id="chart-legend"></div>
     <p></p>
@@ -95,12 +99,17 @@
     </div>
     <h4>Edit Ranking Title</h4>
     <input onClick="this.select();" id="title" placeholder="X Tournament" class="login">
-    
+
+    <p></p>
+    <h4>Add note</h4>
+    <p>This note will appear directly below the ranking title. You may use style tags such as &#60;b&#62; or &#60;i&#62; for bolded or italicized text, respectively. Use &#60;br&#62; for line breaks.</p>
+    <input id="noteInput" type="text" class="login" placeholder="NOTE: x">
+
     <p></p>
     <h4>Edit Start Date</h4>
     <p>Set to the start date in your timezone.</p>
     <input id="datetimeADMIN" type="datetime-local" class="time">
-    
+
     <p></p>
     <h4>Edit graph</h4>
     <p class="add">Minimum value (y-axis)</p>
@@ -109,15 +118,16 @@
     <input onClick="this.select();" id="tick" placeholder="#" class="score" type="number">
     <p class="add">Tick spacing</p>
     <input onClick="this.select();" id="tickspace" placeholder="#" class="score" type="number">
-    
+
     <p></p>
     <h4>Edit Guide Link</h4>
     <input onClick="this.select();" id="guideval" placeholder="https://docs.google.com/document/d/..." class="login">
-    
+
     <p></p>
     <h4>Edit JP Crown Data</h4>
     <p>Formatted in your time zone. Enter data every 12 hours from <a href="https://takenama.hatenablog.com/"
-        target="_blank">Takenama's blog</a> or this <a href="https://twitter.com/0102_ro/media" target="_blank">Twitter account</a> (good luck)</p>
+        target="_blank">Takenama's blog</a> or this <a href="https://twitter.com/0102_ro/media" target="_blank">Twitter
+        account</a> (good luck)</p>
 
     <table id="jptable" style="width:80%">
       <tr>

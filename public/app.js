@@ -85,6 +85,14 @@ var tickspace = 0;
         guide.target = "_blank";
         document.getElementById("guideval").value = guidelink;
     });
+    db.ref('/info/note').once('value').then((snapshot) => {
+        let note =  snapshot.node_.value_;
+        if(!note){
+            note = "";
+        }
+        document.getElementById("note").innerHTML = note;
+        document.getElementById("noteInput").value = note;
+    })
 
 
     document.getElementById('loginBtn').addEventListener('click', e => {
@@ -333,6 +341,8 @@ document.getElementById('updateAll').addEventListener('click', e => {
     db.ref('/info/minVal').set(parseInt(minval));
     db.ref('/info/tickCount').set(parseInt(tick));
     db.ref('/info/tickSpace').set(parseInt(tickspace));
+
+    db.ref('/info/note').set(document.getElementById("noteInput").value)
     
     var enteredDate = (new Date(datetimeval.value)).getTime();
     db.ref('/info/minDate').set(enteredDate);
