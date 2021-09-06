@@ -78,6 +78,7 @@ var tickspace = 0;
     db.ref('/info/tickSpace').once('value').then((snapshot) => {
         tickspace = snapshot.node_.value_;
         document.getElementById('tickspace').value = tickspace;
+        value();
     });
     db.ref('/info/guide').once('value').then((snapshot) => {
         let guidelink = snapshot.node_.value_;
@@ -93,6 +94,7 @@ var tickspace = 0;
         document.getElementById("note").innerHTML = note;
         document.getElementById("noteInput").value = note;
     })
+
 
 
     document.getElementById('loginBtn').addEventListener('click', e => {
@@ -419,3 +421,14 @@ document.getElementById("pointstonext").addEventListener("keypress", function(e)
 		submitdata.click();
 	}
 });
+
+function value(){
+    var minval = parseInt(document.getElementById('min').value) || 0;
+    var tick = parseInt(document.getElementById('tick').value) || 0;
+    var tickspace = parseInt(document.getElementById('tickspace').value) || 0;
+    document.getElementById("calcmax").innerHTML = "Calculated max value: " + (minval+(tick*tickspace)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+}
+
+document.getElementById("min").addEventListener("input", e => {value()})
+document.getElementById("tick").addEventListener("input", e => {value()})
+document.getElementById("tickspace").addEventListener("input", e => {value()})
