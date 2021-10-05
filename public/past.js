@@ -61,7 +61,7 @@ async function loadPast() {
         title.innerHTML = item.name;
         allpast.appendChild(title);
         allpast.appendChild(canv);
-        if (pastchart.length-1 != i) {
+        if (pastchart.length - 1 != i) {
             hr.style.marginTop = "20px";
             allpast.appendChild(hr);
             allpast.appendChild(br);

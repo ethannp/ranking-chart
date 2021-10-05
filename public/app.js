@@ -369,7 +369,7 @@ document.getElementById("endrank").addEventListener("click", e => {
             y: ele.y
         });
     });
-    data[2].data.forEach(function (ele) {
+    data[1].data.forEach(function (ele) {
         jpdata.push({
             x: new Date(ele.x).getTime(),
             y: ele.y
