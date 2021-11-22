@@ -87,8 +87,8 @@ var tickspace = 0;
         document.getElementById("guideval").value = guidelink;
     });
     db.ref('/info/note').once('value').then((snapshot) => {
-        let note =  snapshot.node_.value_;
-        if(!note){
+        let note = snapshot.node_.value_;
+        if (!note) {
             note = "";
         }
         document.getElementById("note").innerHTML = note;
@@ -155,7 +155,9 @@ var tickspace = 0;
                             var input = document.createElement("input");
                             input.id = 'jpedit' + counter;
                             input.className = "jpedit";
-                            input.addEventListener("click", e => {input.select();});
+                            input.addEventListener("click", e => {
+                                input.select();
+                            });
                             var cell2Text = document.createTextNode("");
                             input.appendChild(cell2Text);
                             input.value = childSnapshot.val();
@@ -304,14 +306,22 @@ submitdata.addEventListener('click', e => {
     if (score.value.length != 0 && score.checkValidity()) {
         if (pointsto.value.length != 0 && pointsto.checkValidity()) {
             if (enteredDate <= maxDate && enteredDate >= minDate) {
-                const db = firebase.database().ref("/nacrowndata/");
-                db.push().set({
-                    date: enteredDate,
-                    score: (parseInt(score.value) + parseInt(pointsto.value)),
-                })
-                score.value = "";
-                pointsto.value = "";
-                window.location.reload();
+                if (((parseInt(score.value) + parseInt(pointsto.value))
+                        .toString()
+                        .substring(0, ((parseInt(score.value) + parseInt(pointsto.value)).toString().length - 1))
+                        .split('').map(Number)
+                        .reduce((a, b) => a + b) * 2 % 10 == ((parseInt(score.value) + parseInt(pointsto.value)) % 10))) {
+                    const db = firebase.database().ref("/nacrowndata/");
+                    db.push().set({
+                        date: enteredDate,
+                        score: (parseInt(score.value) + parseInt(pointsto.value)),
+                    })
+                    score.value = "";
+                    pointsto.value = "";
+                    window.location.reload();
+                } else {
+                    document.getElementById('submitvalid').innerHTML = "The cutoff is incorrect as the checksum is invalid.";
+                }
             } else {
                 document.getElementById('submitvalid').innerHTML = "The inputted date is invalid.";
             }
@@ -345,7 +355,7 @@ document.getElementById('updateAll').addEventListener('click', e => {
     db.ref('/info/tickSpace').set(parseInt(tickspace));
 
     db.ref('/info/note').set(document.getElementById("noteInput").value)
-    
+
     var enteredDate = (new Date(datetimeval.value)).getTime();
     db.ref('/info/minDate').set(enteredDate);
     db.ref('/info/maxDate').set(enteredDate + (86400000 * 7));
@@ -396,7 +406,7 @@ document.getElementById("endrank").addEventListener("click", e => {
         tickSpace: tickspace
     }
     let pastid = genUUID();
-    db.ref('/past/'+pastid).set(past);
+    db.ref('/past/' + pastid).set(past);
     window.location.reload();
 });
 
@@ -405,30 +415,36 @@ function genUUID() {
 };
 
 document.getElementById("delete").addEventListener("click", e => {
-    let r =confirm("Are you sure you want to delete all NA data?");
-    if(r){
+    let r = confirm("Are you sure you want to delete all NA data?");
+    if (r) {
         let db = firebase.database();
         db.ref('/nacrowndata/').remove();
         db.ref('/nacrowndata/').set({
-            0:0
+            0: 0
         });
         window.location.reload();
     }
 });
 
-document.getElementById("pointstonext").addEventListener("keypress", function(e) {
-	if (e.key == "Enter") {
-		submitdata.click();
-	}
+document.getElementById("pointstonext").addEventListener("keypress", function (e) {
+    if (e.key == "Enter") {
+        submitdata.click();
+    }
 });
 
-function value(){
+function value() {
     var minval = parseInt(document.getElementById('min').value) || 0;
     var tick = parseInt(document.getElementById('tick').value) || 0;
     var tickspace = parseInt(document.getElementById('tickspace').value) || 0;
-    document.getElementById("calcmax").innerHTML = "Calculated max value: " + (minval+(tick*tickspace)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
+    document.getElementById("calcmax").innerHTML = "Calculated max value: " + (minval + (tick * tickspace)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");;
 }
 
-document.getElementById("min").addEventListener("input", e => {value()})
-document.getElementById("tick").addEventListener("input", e => {value()})
-document.getElementById("tickspace").addEventListener("input", e => {value()})
+document.getElementById("min").addEventListener("input", e => {
+    value();
+});
+document.getElementById("tick").addEventListener("input", e => {
+    value();
+});
+document.getElementById("tickspace").addEventListener("input", e => {
+    value();
+});
