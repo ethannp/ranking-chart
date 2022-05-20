@@ -6,16 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PAD Ranking Chart | Past Data</title>
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/8.1.2/firebase-app.js"></script>
-    <script defer src="/__/firebase/8.1.2/firebase-database.js"></script>
-    <script defer src="/__/firebase/8.1.2/firebase-auth.js"></script>
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script>
+        // Render blocking JS:
+        if (localStorage.theme) document.documentElement.setAttribute("data-theme", localStorage.theme);
+      </script>
 
-    <script src='static/Chart.Core.min.js'></script>
-    <script src="static/Chart.Scatter.min.js"></script>
-
-    <script src="jquery.js"></script>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="icon" href="poopcrown.ico" />
@@ -38,6 +33,15 @@
     <p class="bottom">made by fluff#2368</p>
     <p class="bottom"><a href="https://github.com/ethannp/ranking-chart" target="_blank"><i class="fa fa-github" style="font-size: 20px;"></i></a></p>
 
+    <script defer src="/__/firebase/8.1.2/firebase-app.js"></script>
+    <script defer src="/__/firebase/8.1.2/firebase-database.js"></script>
+    <script defer src="/__/firebase/8.1.2/firebase-auth.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+    <script src='static/Chart.Core.min.js'></script>
+    <script src="static/Chart.Scatter.min.js"></script>
+
+    <script src="jquery.js"></script>
     <script defer src="past.js"></script>
 </body>
 

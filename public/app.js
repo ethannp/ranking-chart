@@ -3,6 +3,7 @@ const score = document.getElementById('userscore');
 const pointsto = document.getElementById('pointstonext');
 const datetime = document.getElementById('datetime');
 const form = document.getElementById("form");
+const checkbox = document.querySelector('input[name=theme]');
 var minPercent = 0;
 var maxPercent = 1;
 var minDate = 0;
@@ -17,6 +18,12 @@ var minval = 0;
 var tickspace = 0;
 
 (function () {
+    // do theme
+    if (localStorage.getItem("theme") == "dark") {
+        checkbox.checked = true;
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
     var firebaseConfig = {
         apiKey: "AIzaSyC4zbil44wr1l7QjJ8EbKwbTi4h3jxDycc",
         authDomain: "ranking-chart.firebaseapp.com",
@@ -104,6 +111,7 @@ var tickspace = 0;
         firebase.auth().signOut();
         document.getElementById('enterinfo').innerHTML = "Enter information above then <a onclick=\"createAcc()\"><u>click here to create an account.</u></a>";
         document.getElementById('loginStatus').innerHTML = "";
+        document.getElementById('forgot').innerHTML = `<p id="forgot" style="margin-bottom:0px;margin-top:0px;display:inline-block;">Forgot your password? Enter your email then <a onclick="sendPWReset()"><u>click here</u></a> to send a password reset email.</p>`;
     });
 
     // logging in/out
@@ -116,6 +124,7 @@ var tickspace = 0;
             document.getElementById('loginBtn').style.display = "none";
             document.getElementById('logoutBtn').style.display = "block";
             document.getElementById('enterinfo').innerHTML = "";
+            document.getElementById('forgot').innerHTML = "";
             document.getElementById('infoLogin').innerHTML = "You are logged in as " + user.email.substring(0, user.email.indexOf("@"));
             db.ref('/verified/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
                 if (snapshot.node_.value_) {
@@ -264,7 +273,7 @@ function formatPts() {
         scaleTimeFormat: "mmm d",
         responsive: true,
         maintainAspectRatio: false,
-        legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>" + "&nbsp&nbsp" + "<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>" + "&nbsp" + "<%=datasets[i].label%><%}%>"
+        legendTemplate: "<%for(var i=0;i<datasets.length;i++){%>" + "&nbsp&nbsp" + "<span class=\"<%=name.toLowerCase()%>-legend-marker\" style=\"background-color:<%=datasets[i].strokeColor%>\"></span>" + "&nbsp" + "<%=datasets[i].label%><%}%>",
     });
     var legend = chart.generateLegend();
     document.getElementById("chart-legend").innerHTML = legend;
@@ -439,7 +448,26 @@ document.getElementById("tickspace").addEventListener("input", e => {
 });
 
 document.getElementById("propBtn").addEventListener("click", e => {
-    for(let i = 0; i <= 14; i++) {
+    for (let i = 0; i <= 14; i++) {
         document.getElementById(`jpedit${i}`).value = document.getElementById("prop").value;
     }
 })
+
+checkbox.addEventListener('change', function () {
+    if (this.checked) {
+        trans()
+        document.documentElement.setAttribute('data-theme', 'dark')
+        localStorage.setItem("theme", "dark");
+    } else {
+        trans()
+        document.documentElement.setAttribute('data-theme', 'light')
+        localStorage.setItem("theme", "light");
+    }
+})
+
+let trans = () => {
+    document.documentElement.classList.add('transition');
+    window.setTimeout(() => {
+        document.documentElement.classList.remove('transition')
+    }, 500)
+}

@@ -1,9 +1,28 @@
+html {
+  --color-headings: #039be5;
+  --bg: #ECEFF1;
+  --bg-panel: white;
+  --text-color: rgba(0, 0, 0, 0.8);
+  --light-color: rgba(0, 0, 0, 0.5);
+  --input-color: #f2f2f2;
+  --button-color: #039be5;
+}
+
+html[data-theme=dark] {
+  --bg: #121212;
+  --bg-panel: #1E1E1E;
+  --text-color: rgba(255, 255, 255, 0.8);
+  --light-color: rgba(255, 255, 255, 0.5);
+  --input-color: rgb(51, 51, 51);
+  --button-color: #007fbe;
+}
+
 body {
-  background: #ECEFF1;
-  color: rgba(0, 0, 0, 0.87);
+  background: var(--bg);
   font-family: Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
+  color: var(--text-color);
 }
 
 img {
@@ -14,7 +33,7 @@ img {
 }
 
 .box {
-  background: white;
+  background: var(--bg-panel);
   max-width: 900px;
   padding: 32px 24px;
   border-radius: 3px;
@@ -26,8 +45,12 @@ img {
 }
 
 #top {
-  margin: 75px auto 16px;
+  margin: 30px auto 16px;
   display: block;
+}
+
+#curr {
+  color: var(--text-color);
 }
 
 .box h2 {
@@ -44,32 +67,44 @@ canvas {
   display: block;
 }
 
+#chart-legend {
+  color: var(--text-color);
+}
+
 h1 {
   font-size: 30px;
   font-weight: 300;
-  color: rgba(0, 0, 0, 0.8);
+  color: var(--text-color);
   margin: 0 0 16px;
+}
+
+h4 {
+  color: var(--text-color);
 }
 
 p {
   line-height: 140%;
   margin: 16px 0 24px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.8);
+  color: var(--text-color);
 }
 
 label {
   line-height: 140%;
   margin: 16px 0 24px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--text-color);
 }
 
 a {
   line-height: 140%;
   margin: 16px 0 24px;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--text-color);
+}
+
+a:hover {
+  cursor: pointer;
 }
 
 .box {
@@ -77,7 +112,7 @@ a {
 }
 
 .bottom {
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--light-color);
   text-align: center;
   font-size: 14px;
   margin-bottom: 10px;
@@ -89,25 +124,34 @@ a {
 
 .login {
   outline: 0;
-  background: #f2f2f2;
+  background: var(--input-color);
   width: 100%;
   border: 0;
   margin: 0 0 15px;
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
+  border-radius: 3px;
+  color: var(--text-color);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
 }
 
 .score {
   display: block;
   outline: 0;
-  background: #eee;
+  background: var(--input-color);
   border: 0;
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
   margin-bottom: 20px;
   min-width: 200px;
+  color: var(--text-color);
+  border-radius: 3px;
 }
 
 .score:invalid {
@@ -117,7 +161,7 @@ a {
 .time {
   display: block;
   outline: 0;
-  background: #f2f2f2;
+  background: var(--input-color);
   width: 40%;
   border: 0;
   padding: 15px;
@@ -126,6 +170,7 @@ a {
   margin-bottom: 20px;
   font-family: Roboto;
   min-width: 300px;
+  color: var(--text-color);
 }
 
 #datetime:invalid {
@@ -148,14 +193,16 @@ th {
 
 .jpedit {
   outline: 0;
-  background: #f3f3f3;
+  background: var(--input-color);
   width: 50%;
   border: 0;
   padding: 5px;
   box-sizing: border-box;
   margin-bottom: 5px;
   margin-top: 5px;
+  border-radius: 3px;
   min-width: 100px;
+  color: var(--text-color);
 }
 
 .jpedit:invalid {
@@ -173,7 +220,7 @@ th {
   display: inline-block;
   border: 0;
   text-align: center;
-  background: #039be5;
+  background: var(--button-color);
   text-transform: uppercase;
   text-decoration: none;
   color: white;
@@ -182,16 +229,48 @@ th {
   cursor: pointer;
 }
 
-@media (max-width: 600px) {
+#switch {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
 
-  body,
-  #message {
-    margin-top: 0;
-    background: white;
-    box-shadow: none;
-  }
+label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 50px;
+  height: 27px;
+  background: rgb(161, 161, 161);
+  border-radius: 100px;
+  float: right;
+  position: relative;
+}
 
-  body {
-    border-top: 16px solid #ffa100;
-  }
+label:after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 90px;
+  transition: 0.3s;
+}
+
+#switch:checked+label {
+  background: var(--color-headings);
+}
+
+#switch:checked+label:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+html.transition,
+html.transition *,
+html.transition *:before,
+html.transition *:after {
+  transition: all 750ms !important;
+  transition-delay: 0 !important;
 }
