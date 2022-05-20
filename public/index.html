@@ -30,6 +30,7 @@
   <script src="jquery.js"></script>
   <link rel="stylesheet" href="main.css">
   <link rel="icon" href="poopcrown.ico" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <meta name="google-site-verification" content="1eMV9opKWd95mYPWXQuK24EXuqtBIy1_io_NQVPLXHM" />
   <meta name="keywords"
     content="pad, ranking, ranking chart, pad ranking chart, pad ranking, puzzle and dragons, ranking guide">
@@ -102,7 +103,8 @@
 
     <p></p>
     <h4>Add note</h4>
-    <p>This note will appear directly below the ranking title. You may use style tags such as &#60;b&#62; or &#60;i&#62; for bolded or italicized text, respectively. Use &#60;br&#62; for line breaks.</p>
+    <p>This note will appear directly below the ranking title. You may use style tags such as &#60;b&#62; or &#60;i&#62;
+      for bolded or italicized text, respectively. Use &#60;br&#62; for line breaks.</p>
     <input id="noteInput" type="text" class="login" placeholder="NOTE: x">
 
     <p></p>
@@ -129,6 +131,9 @@
     <p>Formatted in your time zone. Enter data every 12 hours from <a href="https://takenama.hatenablog.com/"
         target="_blank">Takenama's blog</a> or this <a href="https://twitter.com/0102_ro/media" target="_blank">Twitter
         account</a> (good luck)</p>
+    <p class="add">Propagate value:</p>
+    <input onClick="this.select();" class="score" type="number" id="prop" placeholder="#" style="display:inline-block; margin-right:20px;"> 
+    <button id="propBtn" stlye="display:inline-block;">Propagate</button>
 
     <table id="jptable" style="width:80%">
       <tr>
@@ -139,8 +144,8 @@
     <p></p>
     <button id="updateAll">Save edits</button>
   </div>
-  <p id="bottom">made by fluff#2368</p>
-  <p id="bottom">feel free to dm me any suggestions :)</p>
+  <p class="bottom">made by fluff#2368</p>
+  <p class="bottom"><a href="https://github.com/ethannp/ranking-chart" target="_blank"><i class="fa fa-github" style="font-size: 20px;"></i></a></p>
 
   <script defer src="app.js"></script>
 </body>

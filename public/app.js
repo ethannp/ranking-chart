@@ -1,19 +1,8 @@
-const ranking = document.getElementById('curr');
-const infoLogin = document.getElementById('infoLogin');
 const admin = document.getElementById('admin');
 const score = document.getElementById('userscore');
 const pointsto = document.getElementById('pointstonext');
 const datetime = document.getElementById('datetime');
-const submitdata = document.getElementById('submitdata');
-const jptable = document.getElementById('jptable');
-const jpBtn = document.getElementById('updateJP');
-const exportBtn = document.getElementById('export');
-const updTitle = document.getElementById("updatetitle");
 const form = document.getElementById("form");
-const need = document.getElementById("need");
-const datetimeAdmin = document.getElementById('updateDate');
-const datetimeval = document.getElementById('datetimeADMIN');
-const guide = document.getElementById('guide');
 var minPercent = 0;
 var maxPercent = 1;
 var minDate = 0;
@@ -64,7 +53,7 @@ var tickspace = 0;
         datetime.value = x.substring(0, x.length - 3);
     });
     db.ref('/info/name').once('value').then((snapshot) => {
-        ranking.innerHTML = "Current Ranking: " + snapshot.node_.value_;
+        document.getElementById('curr').innerHTML = "Current Ranking: " + snapshot.node_.value_;
         document.getElementById("title").value = snapshot.node_.value_;
     });
     db.ref('/info/minVal').once('value').then((snapshot) => {
@@ -82,8 +71,8 @@ var tickspace = 0;
     });
     db.ref('/info/guide').once('value').then((snapshot) => {
         let guidelink = snapshot.node_.value_;
-        guide.href = guidelink;
-        guide.target = "_blank";
+        document.getElementById('guide').href = guidelink;
+        document.getElementById('guide').target = "_blank";
         document.getElementById("guideval").value = guidelink;
     });
     db.ref('/info/note').once('value').then((snapshot) => {
@@ -127,11 +116,11 @@ var tickspace = 0;
             document.getElementById('loginBtn').style.display = "none";
             document.getElementById('logoutBtn').style.display = "block";
             document.getElementById('enterinfo').innerHTML = "";
-            infoLogin.innerHTML = "You are logged in as " + user.email.substring(0, user.email.indexOf("@"));
+            document.getElementById('infoLogin').innerHTML = "You are logged in as " + user.email.substring(0, user.email.indexOf("@"));
             db.ref('/verified/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
                 if (snapshot.node_.value_) {
                     form.style.display = "block";
-                    need.style.display = "none";
+                    document.getElementById("need").style.display = "none";
                 } else {
                     document.getElementById('loginStatus').innerHTML = "Please DM me on discord @fluff#2368 indicating you've created an account. ";
                 }
@@ -145,7 +134,7 @@ var tickspace = 0;
                     // jp data 86400000
                     var jpcrown = db.ref('jpcrowndata');
                     let counter = 0;
-                    jptable.innerHTML = "";
+                    document.getElementById('jptable').innerHTML = "";
                     jpcrown.on('value', function (snapshot) {
                         snapshot.forEach(function (childSnapshot) {
                             var row = document.createElement("tr");
@@ -169,7 +158,7 @@ var tickspace = 0;
                             row.appendChild(cell1);
                             row.appendChild(cell2);
                             counter++;
-                            jptable.appendChild(row);
+                            document.getElementById('jptable').appendChild(row);
                         })
                     });
                 }
@@ -179,10 +168,10 @@ var tickspace = 0;
             document.getElementById('logoutBtn').style.display = "none";
             document.getElementById('user').style.display = "block";
             document.getElementById('pass').style.display = "block";
-            infoLogin.innerHTML = "";
+            document.getElementById('infoLogin').innerHTML = "";
             admin.style.display = "none";
             form.style.display = "none";
-            need.style.display = "block";
+            document.getElementById("need").style.display = "block";
         }
     });
 
@@ -298,7 +287,7 @@ document.getElementById('user').addEventListener("keyup", function (event) {
     }
 });
 
-submitdata.addEventListener('click', e => {
+document.getElementById('submitdata').addEventListener('click', e => {
     var enteredDate = (new Date(datetime.value)).getTime();
     /*var d = new Date();
     var localOffset = d.getTimezoneOffset() * 60000;
@@ -334,9 +323,9 @@ submitdata.addEventListener('click', e => {
 });
 
 
-exportBtn.addEventListener('click', e => {
+document.getElementById('export').addEventListener('click', e => {
     var link = document.createElement('a');
-    link.download = ranking.innerHTML.substring(17) + '.png';
+    link.download = document.getElementById('curr').innerHTML.substring(17) + '.png';
     link.href = document.getElementById('chart').toDataURL()
     link.click();
 })
@@ -356,7 +345,7 @@ document.getElementById('updateAll').addEventListener('click', e => {
 
     db.ref('/info/note').set(document.getElementById("noteInput").value)
 
-    var enteredDate = (new Date(datetimeval.value)).getTime();
+    var enteredDate = (new Date(document.getElementById('datetimeADMIN').value)).getTime();
     db.ref('/info/minDate').set(enteredDate);
     db.ref('/info/maxDate').set(enteredDate + (86400000 * 7));
 
@@ -398,7 +387,7 @@ document.getElementById("endrank").addEventListener("click", e => {
     ];
     let past = {
         data: newdata,
-        name: ranking.innerHTML.substring(17),
+        name: document.getElementById('curr').innerHTML.substring(17),
         minDate: minDate,
         maxDate: maxDate,
         minVal: minval,
@@ -411,7 +400,7 @@ document.getElementById("endrank").addEventListener("click", e => {
 });
 
 function genUUID() {
-    return '' + Math.random().toString(36).substr(2, 10);
+    return '' + Math.random().toString(36).substring(2, 10);
 };
 
 document.getElementById("delete").addEventListener("click", e => {
@@ -428,7 +417,7 @@ document.getElementById("delete").addEventListener("click", e => {
 
 document.getElementById("pointstonext").addEventListener("keypress", function (e) {
     if (e.key == "Enter") {
-        submitdata.click();
+        document.getElementById('submitdata').click();
     }
 });
 
@@ -448,3 +437,9 @@ document.getElementById("tick").addEventListener("input", e => {
 document.getElementById("tickspace").addEventListener("input", e => {
     value();
 });
+
+document.getElementById("propBtn").addEventListener("click", e => {
+    for(let i = 0; i <= 14; i++) {
+        document.getElementById(`jpedit${i}`).value = document.getElementById("prop").value;
+    }
+})
