@@ -304,7 +304,16 @@ document.getElementById('submitdata').addEventListener('click', e => {
     if (score.value.length != 0 && score.checkValidity()) {
         if (pointsto.value.length != 0 && pointsto.checkValidity()) {
             if (enteredDate <= maxDate && enteredDate >= minDate) {
-                if (((parseInt(score.value) + parseInt(pointsto.value))
+                const db = firebase.database().ref("/nacrowndata/");
+                    db.push().set({
+                        date: enteredDate,
+                        score: (parseInt(score.value) + parseInt(pointsto.value)),
+                    })
+                    score.value = "";
+                    pointsto.value = "";
+                    window.location.reload();
+                // Checksum changed
+                /*if (((parseInt(score.value) + parseInt(pointsto.value))
                         .toString()
                         .substring(0, ((parseInt(score.value) + parseInt(pointsto.value)).toString().length - 1))
                         .split('').map(Number)
@@ -319,7 +328,7 @@ document.getElementById('submitdata').addEventListener('click', e => {
                     window.location.reload();
                 } else {
                     document.getElementById('submitvalid').innerHTML = "The cutoff is incorrect as the checksum is invalid.";
-                }
+                }*/
             } else {
                 document.getElementById('submitvalid').innerHTML = "The inputted date is invalid.";
             }
