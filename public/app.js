@@ -343,8 +343,23 @@ document.getElementById('submitdata').addEventListener('click', e => {
 
 document.getElementById('export').addEventListener('click', e => {
     var link = document.createElement('a');
-    link.download = document.getElementById('curr').innerHTML.substring(17) + '.png';
-    link.href = document.getElementById('chart').toDataURL()
+    let canvas = document.getElementById("chart");
+    let context = canvas.getContext("2d");
+    // set background of canvas to white
+    let w = canvas.width;
+    let h = canvas.height;
+    let data = context.getImageData(0,0,w,h);
+    let compositeOperation = context.globalCompositeOperation;
+    context.globalCompositeOperation = "destination-over";
+    context.fillStyle = "white";
+    context.fillRect(0,0,w,h);
+    let imageData = canvas.toDataURL();
+    context.clearRect(0,0,w,h);
+    context.putImageData(data,0,0);
+    context.globalCompositeOperation = compositeOperation;
+
+    link.download = document.getElementById('curr').innerHTML.substring(17) + Date.now() + '.png';
+    link.href = imageData;
     link.click();
 })
 
