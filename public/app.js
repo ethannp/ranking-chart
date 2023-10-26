@@ -131,7 +131,7 @@ var tickspace = 0;
                     form.style.display = "block";
                     document.getElementById("need").style.display = "none";
                 } else {
-                    document.getElementById('loginStatus').innerHTML = "Please DM me on discord @fluff#2368 indicating you've created an account. ";
+                    document.getElementById('loginStatus').innerHTML = "Please DM me on discord @flfff indicating you've created an account. ";
                 }
             });
             if (firebase.auth().currentUser.uid == "Z95D7uaVpXR7mCcVyFKyhS6hhs12") {
