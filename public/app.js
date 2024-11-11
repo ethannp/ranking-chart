@@ -90,6 +90,9 @@ var tickspace = 0;
         document.getElementById("note").innerHTML = note;
         document.getElementById("noteInput").value = note;
     })
+    db.ref('jpcrowndata/0/').once('value', function (snap) {
+        document.getElementById("jpscore").value = snap.val();
+    })
 
 
 
@@ -141,8 +144,69 @@ var tickspace = 0;
                 if (snapshot.node_.value_) {
                     admin.style.display = "block";
                     // jp data 86400000
-                    var jpcrown = db.ref('jpcrowndata');
+
                     let counter = 0;
+                    let nacrown = db.ref('nacrowndata');
+                    nacrown.once('value', function (snapshot) {
+                        let entire = snapshot.val();
+                        let entirelist = Object.entries(entire);
+                        entirelist.shift();
+                        entirelist.sort((a,b) => {
+                            return a[1].date - b[1].date;
+                        })
+                        //console.log(entirelist);
+
+                        entirelist.forEach(function(v){
+                            let k = v[0];
+                            let val = v[1];
+                            //round to nearest minute
+                            val.date = Math.round(val.date / 1000 / 60) * 60 * 1000
+                            let row = document.createElement("tr");
+                            let cell1 = document.createElement("td");
+                            //console.log(val);
+                            //<input id="datetime" type="datetime-local" class="time">
+                            let cell1date = document.createElement("input");
+                            cell1date.type = "datetime-local";
+                            cell1date.classList.add("time");
+                            cell1date.id = "natime" + counter;
+                            datetime.min = (new Date(val.date)).toISOString();
+                            let tzoffset = (new Date()).getTimezoneOffset() * 60000;
+                            cell1date.value = (new Date(val.date - tzoffset)).toISOString().slice(0, -1);
+
+                            let cell2 = document.createElement("td");
+                            let input = document.createElement("input");
+                            input.id = 'naedit' + counter;
+                            input.classList.add("score");
+                            input.addEventListener("click", e => {
+                                input.select();
+                            });
+                            let cell2Text = document.createTextNode("");
+                            input.appendChild(cell2Text);
+                            input.value = val.score;
+                            input.type = "number";
+                            input.min = 1;
+                            input.max = 999999;
+                            
+                            let label = document.createElement("p");
+                            label.classList.add("underlabel")
+                            label.textContent = k;
+                            label.id = "nalabel" + counter;
+                            let label2 = document.createElement("p");
+                            label2.classList.add("underlabel");
+                            label2.innerHTML = "&nbsp;";
+                            cell1.appendChild(label);
+                            cell1.appendChild(cell1date);
+                            cell2.appendChild(label2);
+                            cell2.appendChild(input);
+                            row.appendChild(cell1);
+                            row.appendChild(cell2);
+                            counter++;
+                            document.getElementById('natable').appendChild(row);
+                        })
+                    })
+
+
+                    /*let counter = 0;
                     document.getElementById('jptable').innerHTML = "";
                     jpcrown.on('value', function (snapshot) {
                         snapshot.forEach(function (childSnapshot) {
@@ -169,7 +233,7 @@ var tickspace = 0;
                             counter++;
                             document.getElementById('jptable').appendChild(row);
                         })
-                    });
+                    });*/
                 }
             });
         } else {
@@ -238,15 +302,15 @@ function formatPts() {
         return new Date(b.x) - new Date(a.x);
     });
     data = [{
-            label: 'NA Crown',
-            strokeColor: '#A31515',
-            data: datapts
-        },
-        {
-            label: 'JP Crown  ',
-            strokeColor: '#007acc',
-            data: jpdatapts
-        }
+        label: 'NA Crown',
+        strokeColor: '#A31515',
+        data: datapts
+    },
+    {
+        label: 'JP Crown',
+        strokeColor: '#007acc',
+        data: jpdatapts
+    }
     ];
     var ctx = document.getElementById('chart').getContext('2d');
     var chart = new Chart(ctx).Scatter(data, {
@@ -305,13 +369,13 @@ document.getElementById('submitdata').addEventListener('click', e => {
         if (pointsto.value.length != 0 && pointsto.checkValidity()) {
             if (enteredDate <= maxDate && enteredDate >= minDate) {
                 const db = firebase.database().ref("/nacrowndata/");
-                    db.push().set({
-                        date: enteredDate,
-                        score: (parseInt(score.value) + parseInt(pointsto.value)),
-                    })
-                    score.value = "";
-                    pointsto.value = "";
-                    window.location.reload();
+                db.push().set({
+                    date: enteredDate,
+                    score: (parseInt(score.value) + parseInt(pointsto.value)),
+                })
+                score.value = "";
+                pointsto.value = "";
+                window.location.reload();
                 // Checksum changed
                 /*if (((parseInt(score.value) + parseInt(pointsto.value))
                         .toString()
@@ -348,14 +412,14 @@ document.getElementById('export').addEventListener('click', e => {
     // set background of canvas to white
     let w = canvas.width;
     let h = canvas.height;
-    let data = context.getImageData(0,0,w,h);
+    let data = context.getImageData(0, 0, w, h);
     let compositeOperation = context.globalCompositeOperation;
     context.globalCompositeOperation = "destination-over";
     context.fillStyle = "white";
-    context.fillRect(0,0,w,h);
+    context.fillRect(0, 0, w, h);
     let imageData = canvas.toDataURL();
-    context.clearRect(0,0,w,h);
-    context.putImageData(data,0,0);
+    context.clearRect(0, 0, w, h);
+    context.putImageData(data, 0, 0);
     context.globalCompositeOperation = compositeOperation;
 
     link.download = document.getElementById('curr').innerHTML.substring(17) + Date.now() + '.png';
@@ -385,7 +449,21 @@ document.getElementById('updateAll').addEventListener('click', e => {
     db.ref('/info/name').set(document.getElementById('title').value);
 
     for (let i = 0; i < 15; i++) {
-        db.ref('/jpcrowndata/' + i).set(document.getElementById('jpedit' + i).value);
+        db.ref('/jpcrowndata/' + i).set(document.getElementById('jpscore').value);
+    }
+
+    let natable = document.getElementById("natable");
+    for(let i = 0; i < natable.rows.length-1; i++) {
+        let time = (new Date(document.getElementById('natime' + i).value)).getTime();
+        let score = document.getElementById("naedit" + i).value;
+        let label = document.getElementById("nalabel" + i).textContent;
+        //console.log(label, time, score);
+        if(score == 0) {
+            db.ref('/nacrowndata/' + label).remove();
+        } else {
+            db.ref('/nacrowndata/' + label + "/date").set(time);
+            db.ref('/nacrowndata/' + label + "/score").set(score);
+        }
     }
 
     window.location.reload();
@@ -408,15 +486,15 @@ document.getElementById("endrank").addEventListener("click", e => {
         });
     });
     let newdata = [{
-            label: 'NA Crown',
-            strokeColor: '#A31515',
-            data: nadata
-        },
-        {
-            label: 'JP Crown  ',
-            strokeColor: '#007acc',
-            data: jpdata
-        }
+        label: 'NA Crown',
+        strokeColor: '#A31515',
+        data: nadata
+    },
+    {
+        label: 'JP Crown  ',
+        strokeColor: '#007acc',
+        data: jpdata
+    }
     ];
     let past = {
         data: newdata,
@@ -471,11 +549,11 @@ document.getElementById("tickspace").addEventListener("input", e => {
     value();
 });
 
-document.getElementById("propBtn").addEventListener("click", e => {
-    for (let i = 0; i <= 14; i++) {
-        document.getElementById(`jpedit${i}`).value = document.getElementById("prop").value;
-    }
-})
+// document.getElementById("propBtn").addEventListener("click", e => {
+//     for (let i = 0; i <= 14; i++) {
+//         document.getElementById(`jpedit${i}`).value = document.getElementById("prop").value;
+//     }
+// })
 
 checkbox.addEventListener('change', function () {
     if (this.checked) {

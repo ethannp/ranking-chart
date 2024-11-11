@@ -97,22 +97,22 @@
       <p></p>
       <button id="delete">Delete NA Data</button>
     </div>
-    <h4>Edit Ranking Title</h4>
+    <h4>Ranking Title</h4>
     <input onClick="this.select();" id="title" placeholder="X Tournament" class="login">
 
     <p></p>
-    <h4>Add note</h4>
-    <p>This note will appear directly below the ranking title. You may use style tags such as &#60;b&#62; or &#60;i&#62;
+    <h4>Note</h4>
+    <p class="lessspace">This note will appear directly below the ranking title. You may use style tags such as &#60;b&#62; or &#60;i&#62;
       for bolded or italicized text, respectively. Use &#60;br&#62; for line breaks.</p>
     <input id="noteInput" type="text" class="login" placeholder="NOTE: x">
 
     <p></p>
-    <h4>Edit Start Date</h4>
-    <p>Set to the start date in your timezone.</p>
+    <h4>Start Date</h4>
+    <p class="lessspace">Set to the start date in your timezone.</p>
     <input id="datetimeADMIN" type="datetime-local" class="time">
 
     <p></p>
-    <h4>Edit graph</h4>
+    <h4>Graph details</h4>
     <p class="add">Minimum value (y-axis)</p>
     <input onClick="this.select();" id="min" placeholder="#" class="score" type="number">
     <p class="add">Tick count</p>
@@ -122,26 +122,37 @@
     <p id="calcmax">Calculated max value: </p>
 
     <p></p>
-    <h4>Edit Guide Link</h4>
+    <h4>Guide Link</h4>
     <input onClick="this.select();" id="guideval" placeholder="https://docs.google.com/document/d/..." class="login">
 
     <p></p>
-    <h4>Edit JP Crown Data</h4>
-    <p>Formatted in your time zone. Enter data every 12 hours from <a href="https://takenama.hatenablog.com/"
+    <h4>JP Crown Cutoff</h4>
+    <input onClick="this.select();" class="score" type="number" id="jpscore" placeholder="#"
+      style="display:inline-block; margin-right:20px;">
+    <!--<p>Formatted in your time zone. Enter data every 12 hours from <a href="https://takenama.hatenablog.com/"
         target="_blank">Takenama's blog</a> or this <a href="https://twitter.com/0102_ro/media" target="_blank">Twitter
         account</a> (good luck)</p>
     <p class="add">Propagate value:</p>
-    <input onClick="this.select();" class="score" type="number" id="prop" placeholder="#"
-      style="display:inline-block; margin-right:20px;">
-    <button id="propBtn" stlye="display:inline-block;">Propagate</button>
 
     <table id="jptable" style="width:80%">
       <tr>
         <th>Date</th>
         <th>Score</th>
       </tr>
+    </table>-->
+    <p></p>
+
+    <h4>NA Crown Data</h4>
+    <p class="lessspace"> Set score to 0 to delete from database (it will be outlined red).</p>
+    <table id="natable" style="width:100%">
+      <tr>
+        <th>Date</th>
+        <th>Score</th>
+      </tr>
     </table>
     <p></p>
+
+
     <button id="updateAll">Save edits</button>
   </div>
   <p class="bottom">made by fluff</p>
