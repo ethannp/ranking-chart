@@ -137,9 +137,6 @@ var tickspace = 0;
                     document.getElementById('loginStatus').innerHTML = "Please DM me on discord @flfff indicating you've created an account. ";
                 }
             });
-            if (firebase.auth().currentUser.uid == "Z95D7uaVpXR7mCcVyFKyhS6hhs12") {
-                document.getElementById("enddiv").style.display = "block";
-            }
             db.ref('/admins/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
                 if (snapshot.node_.value_) {
                     admin.style.display = "block";
