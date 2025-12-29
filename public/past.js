@@ -16,10 +16,24 @@
 });
 
 $(async function () {
-    loadPast();
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            firebase.database().ref('/admins/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
+                if (snapshot.node_.value_) {
+                    loadPast(true);
+                } else {
+                    loadPast(false);
+                }
+            })
+        }
+        else {
+            loadPast(false);
+        }
+    });
+    
 });
 
-async function loadPast() {
+async function loadPast(admin) {
     let pastchart = await getChart();
     const allpast = document.getElementById("allpast");
     let i = 0;
@@ -59,6 +73,9 @@ async function loadPast() {
         let title = document.createElement("h4");
         let hr = document.createElement("hr");
         title.innerHTML = item.name;
+        if (admin) {
+            title.innerHTML += `<span style='padding-left: 10px; font-weight: normal;' class='underlabel'>${item['key']}</span>`;
+        }
         allpast.appendChild(title);
         allpast.appendChild(canv);
         if (pastchart.length - 1 != i) {
@@ -75,8 +92,11 @@ async function getChart() {
     let snap = await db.once("value");
     let charts = [];
     let value = snap.val();
+    console.log(value);
     for (const item in value) {
-        charts.push(value[item]);
+        let obj = value[item];
+        obj['key'] = item;
+        charts.push(obj);
     }
     charts.sort((a, b) => (a.minDate > b.minDate) ? 1 : -1);
     charts = charts.reverse();
