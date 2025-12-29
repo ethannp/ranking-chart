@@ -92,7 +92,6 @@ async function getChart() {
     let snap = await db.once("value");
     let charts = [];
     let value = snap.val();
-    console.log(value);
     for (const item in value) {
         let obj = value[item];
         obj['key'] = item;

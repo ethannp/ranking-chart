@@ -128,7 +128,7 @@ var tickspace = 0;
             document.getElementById('logoutBtn').style.display = "block";
             document.getElementById('enterinfo').innerHTML = "";
             document.getElementById('forgot').innerHTML = "";
-            document.getElementById('infoLogin').innerHTML = "You are logged in as " + user.email.substring(0, user.email.indexOf("@"));
+            document.getElementById('infoLogin').innerHTML = "You are logged in as " + user.email;
             db.ref('/verified/' + firebase.auth().currentUser.uid).once('value').then((snapshot) => {
                 if (snapshot.node_.value_) {
                     form.style.display = "block";
@@ -502,14 +502,18 @@ document.getElementById("endrank").addEventListener("click", e => {
         tickCount: tickcount,
         tickSpace: tickspace
     }
-    let pastid = genUUID();
+    let pastid = genUUID(12);
     db.ref('/past/' + pastid).set(past);
     window.location.reload();
 });
 
-function genUUID() {
-    return '' + Math.random().toString(36).substring(2, 10);
-};
+function genUUID(len) {
+    var chars = '';
+    while (chars.length < len) {
+        chars += Math.random().toString(36).substring(2);
+    }
+    return chars.substring(0, len);
+}
 
 document.getElementById("delete").addEventListener("click", e => {
     let r = confirm("Are you sure you want to delete all NA data?");
