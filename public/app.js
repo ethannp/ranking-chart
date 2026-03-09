@@ -95,6 +95,32 @@ var tickspace = 0;
     })
 
 
+    
+
+    db.ref("/past/").once('value', function (snap) {
+        let charts = [];
+        let value = snap.val();
+        for (const item in value) {
+            let obj = value[item];
+            obj['key'] = item;
+            charts.push(obj);
+        }
+        charts.sort((a, b) => (a.minDate > b.minDate) ? 1 : -1);
+        charts = charts.reverse();
+        console.log(charts[0]);
+        document.getElementById("mostrecent").textContent = charts[0].name;
+        let note = document.getElementById("savenote");
+        if(charts[0].name == document.getElementById("title").value) {
+            note.textContent = "The current ranking has been saved!";
+            note.style = "margin-top: 0;padding: 5px; display: inline-block; background-color: rgba(183, 255, 190, 0.4)"
+        } else {
+            note.textContent = "The current ranking has not been saved yet!";
+            note.style = "margin-top: 0;padding: 5px; display: inline-block; background-color: rgba(255, 183, 183, 0.4)"
+        }
+    });
+
+
+
 
     document.getElementById('loginBtn').addEventListener('click', e => {
         const email = document.getElementById('user').value;
@@ -502,12 +528,12 @@ document.getElementById("endrank").addEventListener("click", e => {
         tickCount: tickcount,
         tickSpace: tickspace
     }
-    let pastid = genUUID(12);
+    let pastid = genID(12);
     db.ref('/past/' + pastid).set(past);
     window.location.reload();
 });
 
-function genUUID(len) {
+function genID(len) {
     var chars = '';
     while (chars.length < len) {
         chars += Math.random().toString(36).substring(2);
@@ -574,3 +600,4 @@ let trans = () => {
         document.documentElement.classList.remove('transition')
     }, 500)
 }
+
