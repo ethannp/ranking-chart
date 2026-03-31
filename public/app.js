@@ -529,8 +529,17 @@ document.getElementById("endrank").addEventListener("click", e => {
         tickSpace: tickspace
     }
     let pastid = genID(12);
-    db.ref('/past/' + pastid).set(past);
-    window.location.reload();
+    db.ref('/past/' + pastid).set(past)
+        .then(() => {
+            window.location.reload();
+        })
+        .catch ((err) => {
+            console.log("Failed to save!");
+            console.log(err);
+            document.getElementById("savenote").innerHTML += "<br/><b>Failed to save! Check console for more details.</b>"
+    });
+    
+    
 });
 
 function genID(len) {
